@@ -22,6 +22,8 @@ jobs:
            run: 'env | sort'
          - name: install node
            uses: actions/setup-node@v4
+           with:
+              node-version: '24.15.0'
          - name: install dependencies and audit
            run: |
               npm install
