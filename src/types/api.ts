@@ -1,0 +1,31 @@
+export interface ResourceBase {
+   name: string;
+   url: string;
+}
+
+export interface Character {
+   id: number;
+   name: string;
+   status: 'Alive' | 'Dead' | 'unknown';
+   species: string;
+   type: string;
+   gender: 'Female' | 'Male' | 'Genderless' | 'unknown';
+   origin: ResourceBase;
+   location: ResourceBase;
+   image: string;
+   episode: string[]; // Lista de URLs dos episódios
+   url: string;
+   created: string;
+}
+
+export interface Info {
+   count: number;
+   pages: number;
+   next: string | null;
+   prev: string | null;
+}
+
+export interface ApiResponse<T> {
+   info: Info;
+   results: T[];
+}
