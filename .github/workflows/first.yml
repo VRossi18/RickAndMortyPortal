@@ -41,7 +41,7 @@ jobs:
               npm install
               npm run build
               npm audit
-  job3:
+   job3:
       name: MacOS job
       runs-on: macos-latest
       steps:
