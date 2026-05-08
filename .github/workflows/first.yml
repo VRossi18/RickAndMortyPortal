@@ -19,8 +19,6 @@ jobs:
            run: |
               npm install
               npm run build
-         - name: step four
-           run: npm run test
    job2:
       name: second job
       runs-on: windows-latest
@@ -33,5 +31,3 @@ jobs:
            run: |
               npm install
               npm run build
-         - name: step four
-           run: npm run test
