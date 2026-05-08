@@ -13,18 +13,32 @@ jobs:
       steps:
          - name: checkout
            uses: actions/checkout@v4
-   job2:
-      name: second job
-      needs: job1
-      runs-on: ubuntu-latest
-      steps:
-         - name: environment variables
-           run: 'env | sort'
          - name: install node
            uses: actions/setup-node@v4
            with:
               node-version: '24.15.0'
+         - name: environment variables
+           run: 'env | sort'
          - name: install dependencies and audit
            run: |
               npm install
               npm run build
+              npm audit
+   job2:
+      name: second job
+      needs: job1
+      runs-on: windows-latest
+      steps:
+         - name: checkout
+           uses: actions/checkout@v4
+         - name: install node
+           uses: actions/setup-node@v4
+           with:
+              node-version: '24.15.0'
+         - name: environment variables
+           run: 'Get-ChildItem Env: | Sort-Object Name'
+         - name: install dependencies and audit
+           run: |
+              npm install
+              npm run build
+              npm audit
