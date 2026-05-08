@@ -12,7 +12,6 @@ jobs:
       runs-on: ubuntu-latest
       steps:
          - name: step one
-           run: echo "begin ubuntu"
            uses: actions/checkout@v4
          - name: step two
            run: env | sort
@@ -27,7 +26,6 @@ jobs:
       runs-on: windows-latest
       steps:
          - name: step one
-           run: echo "begin windows"
            uses: actions/checkout@v4
          - name: step two
            run: 'Get-ChildItem Env: | Sort-Object Name'
