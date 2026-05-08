@@ -1,6 +1,10 @@
 name: first
 
-on: [push]
+on:
+   push:
+      branches: [main]
+   pull_request:
+      branches: [main]
 
 jobs:
    job1:
@@ -8,14 +12,28 @@ jobs:
       runs-on: ubuntu-latest
       steps:
          - name: step one
+           run: echo "begin ubuntu"
            uses: actions/checkout@v4
          - name: step two
            run: env | sort
+         - name: step three
+           run: |
+              npm install
+              npm run build
+         - name: step four
+           run: npm run test
    job2:
       name: second job
       runs-on: windows-latest
       steps:
          - name: step one
+           run: echo "begin windows"
            uses: actions/checkout@v4
          - name: step two
            run: 'Get-ChildItem Env: | Sort-Object Name'
+         - name: step three
+           run: |
+              npm install
+              npm run build
+         - name: step four
+           run: npm run test
