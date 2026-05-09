@@ -21,6 +21,10 @@ jobs:
            uses: actions/setup-node@v4
            with:
               node-version: '24.15.0'
+         - name: install pnpm (package manager)
+           uses: pnpm/action-setup@v4
+           with:
+              version: latest
          - name: environment variables
            run: 'env | sort'
          - name: install dependencies and audit
@@ -38,7 +42,7 @@ jobs:
            uses: actions/setup-node@v4
            with:
               node-version: '24.15.0'
-         - name: install pnpm
+         - name: install pnpm (package manager)
            uses: pnpm/action-setup@v4
            with:
               version: latest
@@ -59,6 +63,10 @@ jobs:
            uses: actions/setup-node@v4
            with:
               node-version: '24.15.0'
+         - name: install pnpm (package manager)
+           uses: pnpm/action-setup@v4
+           with:
+              version: latest
          - name: environment variables
            run: 'env | sort'
          - name: install dependencies and audit
