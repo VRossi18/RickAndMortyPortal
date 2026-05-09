@@ -1,4 +1,8 @@
-name: first
+name: build and deploy
+
+env:
+   NODE_VERSION: '24.15.0'
+   PACKAGE_MANAGER: 'pnpm'
 
 on:
    push:
@@ -21,9 +25,9 @@ jobs:
            run: 'env | sort'
          - name: install dependencies and audit
            run: |
-              npm install
-              npm run build
-              npm audit
+              pnpm install
+              pnpm run build
+              pnpm audit
    job2:
       name: Windows job
       runs-on: windows-latest
@@ -38,9 +42,9 @@ jobs:
            run: 'Get-ChildItem Env: | Sort-Object Name'
          - name: install dependencies and audit
            run: |
-              npm install
-              npm run build
-              npm audit
+              pnpm install
+              pnpm run build
+              pnpm audit
    job3:
       name: MacOS job
       runs-on: macos-latest
@@ -55,6 +59,6 @@ jobs:
            run: 'env | sort'
          - name: install dependencies and audit
            run: |
-              npm install
-              npm run build
-              npm audit
+              pnpm install
+              pnpm run build
+              pnpm audit
