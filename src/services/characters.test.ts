@@ -1,0 +1,58 @@
+import { beforeEach, describe, expect, it, vi } from 'vitest';
+import type { ApiResponse, Character } from '../types/api';
+import api from './api';
+import { CharacterService } from './characters';
+
+vi.mock('./api', () => ({
+   default: {
+      get: vi.fn(),
+   },
+}));
+
+const mockedGet = vi.mocked(api.get);
+
+const emptyList: ApiResponse<Character> = {
+   info: { count: 0, pages: 1, next: null, prev: null },
+   results: [],
+};
+
+describe('CharacterService', () => {
+   beforeEach(() => {
+      mockedGet.mockReset();
+   });
+
+   it('getCharacters sends page and optional filters as params', async () => {
+      mockedGet.mockResolvedValue({ data: emptyList });
+      await CharacterService.getCharacters(2, { name: 'Rick', status: 'Alive' });
+      expect(mockedGet).toHaveBeenCalledWith('/character', {
+         params: { page: 2, name: 'Rick', status: 'Alive' },
+      });
+   });
+
+   it('getCharacterById requests a single resource path', async () => {
+      const char: Character = {
+         id: 99,
+         name: 'Rick',
+         status: 'Alive',
+         species: 'Human',
+         type: '',
+         gender: 'Male',
+         origin: { name: 'Earth', url: '' },
+         location: { name: 'Citadel', url: '' },
+         image: '',
+         episode: [],
+         url: '',
+         created: '',
+      };
+      mockedGet.mockResolvedValue({ data: char });
+      const result = await CharacterService.getCharacterById(99);
+      expect(mockedGet).toHaveBeenCalledWith('/character/99');
+      expect(result).toEqual(char);
+   });
+
+   it('getMultipleCharacters joins ids in the path', async () => {
+      mockedGet.mockResolvedValue({ data: [] });
+      await CharacterService.getMultipleCharacters([1, 2, 3]);
+      expect(mockedGet).toHaveBeenCalledWith('/character/1,2,3');
+   });
+});

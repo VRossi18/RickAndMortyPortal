@@ -27,9 +27,10 @@ jobs:
               version: latest
          - name: environment variables
            run: 'env | sort'
-         - name: install dependencies and audit
+         - name: install dependencies, test, build and audit
            run: |
               pnpm install
+              pnpm run test
               pnpm run build
               pnpm audit
    job2:
@@ -48,9 +49,10 @@ jobs:
               version: latest
          - name: environment variables
            run: 'Get-ChildItem Env: | Sort-Object Name'
-         - name: install dependencies and audit
+         - name: install dependencies, test, build and audit
            run: |
               pnpm install
+              pnpm run test
               pnpm run build
               pnpm audit
    job3:
@@ -69,8 +71,9 @@ jobs:
               version: latest
          - name: environment variables
            run: 'env | sort'
-         - name: install dependencies and audit
+         - name: install dependencies, test, build and audit
            run: |
               pnpm install
+              pnpm run test
               pnpm run build
               pnpm audit
