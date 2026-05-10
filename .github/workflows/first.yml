@@ -24,8 +24,6 @@ jobs:
          - name: install pnpm (package manager)
            uses: pnpm/action-setup@v4
            with:
-              # pnpm 11+ não lê mais `pnpm.onlyBuiltDependencies` em package.json (só pnpm-workspace.yaml).
-              # Fixar 10.x mantém o allowlist do esbuild e evita ERR_PNPM_IGNORED_BUILDS no CI.
               version: 10.15.0
          - name: environment variables
            run: 'env | sort'
