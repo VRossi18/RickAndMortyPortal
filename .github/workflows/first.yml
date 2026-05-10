@@ -12,52 +12,8 @@ on:
 
 jobs:
    job1:
-      name: Ubuntu job
+      name: Build and test job
       runs-on: ubuntu-latest
-      steps:
-         - name: checkout
-           uses: actions/checkout@v4
-         - name: install node
-           uses: actions/setup-node@v4
-           with:
-              node-version: '24.15.0'
-         - name: install pnpm (package manager)
-           uses: pnpm/action-setup@v4
-           with:
-              version: latest
-         - name: environment variables
-           run: 'env | sort'
-         - name: install dependencies, test, build and audit
-           run: |
-              pnpm install
-              pnpm run test
-              pnpm run build
-              pnpm audit
-   job2:
-      name: Windows job
-      runs-on: windows-latest
-      steps:
-         - name: checkout
-           uses: actions/checkout@v4
-         - name: install node
-           uses: actions/setup-node@v4
-           with:
-              node-version: '24.15.0'
-         - name: install pnpm (package manager)
-           uses: pnpm/action-setup@v4
-           with:
-              version: latest
-         - name: environment variables
-           run: 'Get-ChildItem Env: | Sort-Object Name'
-         - name: install dependencies, test, build and audit
-           run: |
-              pnpm install
-              pnpm run test
-              pnpm run build
-              pnpm audit
-   job3:
-      name: MacOS job
-      runs-on: macos-latest
       steps:
          - name: checkout
            uses: actions/checkout@v4
