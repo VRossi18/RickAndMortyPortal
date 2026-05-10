@@ -11,31 +11,8 @@ on:
       branches: [main]
 
 jobs:
-   build:
-      name: Build
-      runs-on: ubuntu-latest
-      steps:
-         - name: checkout
-           uses: actions/checkout@v4
-         - name: install node
-           uses: actions/setup-node@v4
-           with:
-              node-version: '24.15.0'
-         - name: install pnpm (package manager)
-           uses: pnpm/action-setup@v4
-           with:
-              version: 10.15.0
-         - name: environment variables
-           run: 'env | sort'
-         - name: install dependencies, test, build and audit
-           run: |
-              pnpm install
-              pnpm run test
-              pnpm run build
-              pnpm audit
-   test:
-      name: Test
-      needs: build
+   install-and-test:
+      name: install-and-test
       runs-on: ubuntu-latest
       steps:
          - name: checkout
@@ -52,4 +29,23 @@ jobs:
            run: |
               pnpm install
               pnpm run test
+   build-and-audit:
+      name: build-and-audit
+      needs: install-and-test
+      runs-on: ubuntu-latest
+      steps:
+         - name: checkout
+           uses: actions/checkout@v4
+         - name: install node
+           uses: actions/setup-node@v4
+           with:
+              node-version: '24.15.0'
+         - name: install pnpm (package manager)
+           uses: pnpm/action-setup@v4
+           with:
+              version: 10.15.0
+         - name: install dependencies, build and audit
+           run: |
+              pnpm install
+              pnpm run build
               pnpm audit
