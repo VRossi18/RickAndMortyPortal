@@ -1,15 +1,115 @@
 import { motion } from 'framer-motion';
+import {
+   IconInstagram,
+   IconLinkedIn,
+   IconMail,
+   IconMapPin,
+   IconX,
+} from '../components/about/AboutSocialIcons';
 
-/** Placeholder: conteúdo “Sobre mim” será implementado depois. */
+const SKILLS_INTRO =
+   'Sou desenvolvedor de software com mais de nove anos de experiência construindo e evoluindo sistemas de alta performance em fintech, SaaS, jogos e sistemas de saúde. Trabalho com JavaScript, TypeScript, Node.js, React, C# e .NET, microsserviços e integrações orientadas a eventos (por exemplo RabbitMQ), além de práticas de código limpo, SOLID e pipelines de CI/CD (GitHub Actions, Jenkins). Tenho forte atuação em nuvem AWS, containers com Docker e Podman, segurança com OAuth2 e JWT, observabilidade com Datadog e desenvolvimento de jogos com Unity e Godot. Valorizo mentoria de equipes, design de arquiteturas escaláveis e colaboração ágil em times remotos.';
+
+const PORTRAIT_SRC = '/about/portrait.png';
+
+const socialLinks = [
+   {
+      href: 'mailto:viniciusprossi18@gmail.com',
+      label: 'Email',
+      description: 'viniciusprossi18@gmail.com',
+      Icon: IconMail,
+      external: false as const,
+   },
+   {
+      href: 'https://www.instagram.com/virossii/',
+      label: 'Instagram',
+      description: '@virossii',
+      Icon: IconInstagram,
+      external: true as const,
+   },
+   {
+      href: 'https://www.linkedin.com/in/vinicius-pimenta-rossi/',
+      label: 'LinkedIn',
+      description: 'in/vinicius-pimenta-rossi',
+      Icon: IconLinkedIn,
+      external: true as const,
+   },
+   {
+      href: 'https://x.com/Vinicius_Rossi5',
+      label: 'X',
+      description: '@Vinicius_Rossi5',
+      Icon: IconX,
+      external: true as const,
+   },
+] as const;
+
 export function AboutPage() {
    return (
       <motion.section
          aria-label="Sobre mim"
-         className="min-h-[50vh] bg-[var(--bg-color)] px-4 py-10"
+         className="min-h-[50vh] bg-[var(--bg-color)] px-4 py-10 md:py-14"
          initial={{ opacity: 0 }}
          animate={{ opacity: 1 }}
          exit={{ opacity: 0 }}
          transition={{ duration: 0.28, ease: 'easeOut' }}
-      />
+      >
+         <div className="mx-auto max-w-5xl">
+            <div className="grid gap-10 md:grid-cols-[minmax(0,280px)_1fr] md:items-start md:gap-12 lg:grid-cols-[minmax(0,320px)_1fr]">
+               <figure className="mx-auto w-full max-w-xs md:mx-0 md:max-w-none">
+                  <div className="overflow-hidden rounded-2xl border border-primary/25 bg-card shadow-lg shadow-primary/10">
+                     <img
+                        src={PORTRAIT_SRC}
+                        alt="Retrato de Vinicius Rossi"
+                        className="aspect-[3/4] w-full object-cover object-top"
+                        width={640}
+                        height={853}
+                        decoding="async"
+                     />
+                  </div>
+               </figure>
+
+               <div className="min-w-0 space-y-8">
+                  <header className="space-y-3">
+                     <h1 className="text-4xl font-black tracking-tight text-foreground md:text-5xl">
+                        Vinicius Rossi
+                     </h1>
+                     <p className="flex items-center gap-2 text-sm font-semibold text-muted-foreground">
+                        <IconMapPin className="text-primary" aria-hidden />
+                        <span>Brazil</span>
+                     </p>
+                  </header>
+
+                  <p className="text-base leading-relaxed text-foreground/90 md:text-lg">{SKILLS_INTRO}</p>
+
+                  <div>
+                     <h2 className="mb-3 text-xs font-bold uppercase tracking-widest text-muted-foreground">
+                        Contato e redes
+                     </h2>
+                     <ul className="grid gap-2 sm:grid-cols-2">
+                        {socialLinks.map(({ href, label, description, Icon, external }) => (
+                           <li key={href}>
+                              <a
+                                 href={href}
+                                 {...(external
+                                    ? { target: '_blank', rel: 'noopener noreferrer' }
+                                    : {})}
+                                 className="flex items-center gap-3 rounded-xl border border-border/80 bg-card/50 px-4 py-3 text-left transition hover:border-primary/50 hover:bg-card"
+                              >
+                                 <Icon className="text-primary" />
+                                 <span className="min-w-0">
+                                    <span className="block text-sm font-bold text-foreground">{label}</span>
+                                    <span className="block truncate text-xs text-muted-foreground">
+                                       {description}
+                                    </span>
+                                 </span>
+                              </a>
+                           </li>
+                        ))}
+                     </ul>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </motion.section>
    );
 }

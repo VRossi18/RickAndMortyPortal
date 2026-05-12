@@ -40,6 +40,7 @@ jobs:
               pnpm install
               pnpm lint
               pnpm test
+
    build-and-audit:
       name: Build and audit
       needs: lint-and-test
