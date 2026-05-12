@@ -6,13 +6,15 @@ describe('useTheme', () => {
    beforeEach(() => {
       localStorage.clear();
       document.documentElement.removeAttribute('data-theme');
+      document.documentElement.classList.remove('dark');
    });
 
-   it('syncs theme to document and localStorage when toggled', async () => {
+   it('syncs theme to document, localStorage, and html.dark when toggled', async () => {
       const { result } = renderHook(() => useTheme());
 
       await waitFor(() => {
          expect(document.documentElement.getAttribute('data-theme')).toBe('light');
+         expect(document.documentElement.classList.contains('dark')).toBe(false);
       });
       expect(localStorage.getItem('theme')).toBe('light');
 
@@ -23,6 +25,7 @@ describe('useTheme', () => {
       await waitFor(() => {
          expect(result.current.theme).toBe('dark');
          expect(document.documentElement.getAttribute('data-theme')).toBe('dark');
+         expect(document.documentElement.classList.contains('dark')).toBe(true);
          expect(localStorage.getItem('theme')).toBe('dark');
       });
    });

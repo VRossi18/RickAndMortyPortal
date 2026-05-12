@@ -6,18 +6,21 @@ describe('ThemeToggle', () => {
    beforeEach(() => {
       localStorage.clear();
       document.documentElement.removeAttribute('data-theme');
+      document.documentElement.classList.remove('dark');
    });
 
-   it('toggles data-theme on the document when clicked', async () => {
+   it('toggles data-theme and html.dark when clicked', async () => {
       render(<ThemeToggle />);
       await waitFor(() => {
          expect(document.documentElement.getAttribute('data-theme')).toBe('light');
+         expect(document.documentElement.classList.contains('dark')).toBe(false);
       });
 
       fireEvent.click(screen.getByRole('button', { name: /trocar tema/i }));
 
       await waitFor(() => {
          expect(document.documentElement.getAttribute('data-theme')).toBe('dark');
+         expect(document.documentElement.classList.contains('dark')).toBe(true);
       });
    });
 });
