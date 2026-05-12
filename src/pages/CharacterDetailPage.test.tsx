@@ -2,6 +2,7 @@ import { AxiosError } from 'axios';
 import { render, screen } from '@testing-library/react';
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
+import i18n from '../i18n';
 import { CharacterService } from '../services/characters';
 import type { Character } from '../types/api';
 import { CharacterDetailPage } from './CharacterDetailPage';
@@ -46,7 +47,7 @@ describe('CharacterDetailPage', () => {
       renderAt('/character/abc');
 
       expect(CharacterService.getCharacterById).not.toHaveBeenCalled();
-      expect(screen.getByText('ID invalido.')).toBeInTheDocument();
+      expect(screen.getByText(i18n.t('characterDetail.errorInvalidId'))).toBeInTheDocument();
    });
 
    it('loads character and shows fields', async () => {
@@ -55,7 +56,9 @@ describe('CharacterDetailPage', () => {
       renderAt('/character/2');
 
       expect(await screen.findByRole('heading', { name: 'Morty Smith' })).toBeInTheDocument();
-      expect(screen.getByText('1 episódio(s)')).toBeInTheDocument();
+      expect(
+         screen.getByText(i18n.t('characterDetail.episodeCount', { count: 1 })),
+      ).toBeInTheDocument();
       expect(CharacterService.getCharacterById).toHaveBeenCalledWith(2);
    });
 
@@ -72,6 +75,6 @@ describe('CharacterDetailPage', () => {
 
       renderAt('/character/999');
 
-      expect(await screen.findByText('Personagem nao encontrado.')).toBeInTheDocument();
+      expect(await screen.findByText(i18n.t('characterDetail.errorNotFound'))).toBeInTheDocument();
    });
 });

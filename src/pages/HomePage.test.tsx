@@ -1,6 +1,7 @@
 import { act, fireEvent, render, screen, waitFor, within } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import i18n from '../i18n';
 import type { ApiResponse, Character } from '../types/api';
 import { CharacterService } from '../services/characters';
 import { HomePage } from './HomePage';
@@ -61,9 +62,11 @@ describe('HomePage', () => {
 
    it('renders search field and status filter', () => {
       renderHome();
-      expect(screen.getByPlaceholderText(/Buscar por nome/i)).toBeInTheDocument();
-      const statusSelect = screen.getByLabelText(/Status/i);
-      expect(within(statusSelect).getByRole('option', { name: /Status \(todos\)/i })).toBeInTheDocument();
+      expect(screen.getByPlaceholderText(i18n.t('filters.searchPlaceholder'))).toBeInTheDocument();
+      const statusSelect = screen.getByLabelText(i18n.t('filters.statusLabel'));
+      expect(
+         within(statusSelect).getByRole('option', { name: i18n.t('filters.statusAll') }),
+      ).toBeInTheDocument();
    });
 
    it('requests list with status when status filter changes', async () => {
@@ -71,7 +74,7 @@ describe('HomePage', () => {
       await waitFor(() => expect(mockedGetCharacters).toHaveBeenCalled());
 
       mockedGetCharacters.mockClear();
-      const statusSelect = screen.getByLabelText(/Status/i);
+      const statusSelect = screen.getByLabelText(i18n.t('filters.statusLabel'));
       fireEvent.change(statusSelect, { target: { value: 'alive' } });
 
       await waitFor(() => {
@@ -90,7 +93,7 @@ describe('HomePage', () => {
       expect(mockedGetCharacters).toHaveBeenCalled();
       mockedGetCharacters.mockClear();
 
-      const input = screen.getByPlaceholderText(/Buscar por nome/i);
+      const input = screen.getByPlaceholderText(i18n.t('filters.searchPlaceholder'));
       fireEvent.change(input, { target: { value: 'Morty' } });
 
       expect(mockedGetCharacters).not.toHaveBeenCalled();
@@ -109,10 +112,10 @@ describe('HomePage', () => {
       renderHome();
       await waitFor(() => expect(mockedGetCharacters).toHaveBeenCalled());
 
-      const clearBtn = screen.getByRole('button', { name: /Limpar filtros/i });
+      const clearBtn = screen.getByRole('button', { name: i18n.t('filters.clear') });
       expect(clearBtn).toBeDisabled();
 
-      const statusSelect = screen.getByLabelText(/Status/i);
+      const statusSelect = screen.getByLabelText(i18n.t('filters.statusLabel'));
       fireEvent.change(statusSelect, { target: { value: 'alive' } });
       await waitFor(() => {
          expect(mockedGetCharacters).toHaveBeenCalledWith(1, { status: 'alive' });

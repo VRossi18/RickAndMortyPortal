@@ -1,5 +1,6 @@
 import { motion } from 'framer-motion';
 import { useRef } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import type { Character } from '../types/api';
 import type { CharacterLocationState } from '../types/navigation';
@@ -15,6 +16,7 @@ interface Props {
 export function CharacterCard({ character, interaction = 'normal', onBeforeNavigate }: Props) {
    const ref = useRef<HTMLDivElement>(null);
    const navigate = useNavigate();
+   const { t } = useTranslation('common');
 
    const handleMove = (e: React.MouseEvent<HTMLDivElement>) => {
       const el = ref.current;
@@ -61,7 +63,7 @@ export function CharacterCard({ character, interaction = 'normal', onBeforeNavig
          ref={ref}
          role="link"
          tabIndex={0}
-         aria-label={`Ver detalhes de ${character.name}`}
+         aria-label={t('card.ariaViewDetails', { name: character.name })}
          animate={interactionMotion}
          transition={{ duration: 0.22, ease: 'easeOut' }}
          onMouseMove={handleMove}
@@ -92,10 +94,10 @@ export function CharacterCard({ character, interaction = 'normal', onBeforeNavig
             </div>
             <div className="text-xs text-muted-foreground">
                <p className="truncate">
-                  <span className="opacity-60">Origem:</span> {character.origin.name}
+                  <span className="opacity-60">{t('card.origin')}</span> {character.origin.name}
                </p>
                <p className="truncate">
-                  <span className="opacity-60">Local:</span> {character.location.name}
+                  <span className="opacity-60">{t('card.location')}</span> {character.location.name}
                </p>
             </div>
          </div>

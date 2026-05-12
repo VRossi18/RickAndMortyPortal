@@ -1,5 +1,6 @@
 import { render, screen } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
+import i18n from '../i18n';
 import { AboutPage } from './AboutPage';
 
 describe('AboutPage', () => {
@@ -10,7 +11,7 @@ describe('AboutPage', () => {
 
    it('renders portrait with accessible alt text', () => {
       render(<AboutPage />);
-      expect(screen.getByRole('img', { name: /Retrato de Vinicius Rossi/i })).toHaveAttribute(
+      expect(screen.getByRole('img', { name: i18n.t('about.portraitAlt') })).toHaveAttribute(
          'src',
          `${import.meta.env.BASE_URL}about/portrait.png`,
       );

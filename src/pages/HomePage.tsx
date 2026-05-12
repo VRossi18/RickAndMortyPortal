@@ -2,6 +2,7 @@ import { isAxiosError } from 'axios';
 import { motion } from 'framer-motion';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { flushSync } from 'react-dom';
+import { useTranslation } from 'react-i18next';
 import { CharacterCard } from '../components/CharacterCard';
 import { CharacterFiltersBar } from '../components/CharacterFiltersBar';
 import { CharacterService, type CharacterListFilters } from '../services/characters';
@@ -10,6 +11,7 @@ import type { Character, Info } from '../types/api';
 const emptyInfo: Info = { count: 0, pages: 1, next: null, prev: null };
 
 export function HomePage() {
+   const { t, i18n } = useTranslation('common');
    const [characters, setCharacters] = useState<Character[]>([]);
    const [loading, setLoading] = useState(true);
    const [page, setPage] = useState(1);
@@ -99,7 +101,7 @@ export function HomePage() {
                setError(null);
             } else {
                console.error('Erro ao carregar personagens:', err);
-               setError('Nao foi possivel carregar os personagens desta pagina.');
+               setError(i18n.t('home.errorLoad'));
             }
          } finally {
             if (isMounted) {
@@ -113,7 +115,7 @@ export function HomePage() {
       return () => {
          isMounted = false;
       };
-   }, [page, listFilters]);
+   }, [page, listFilters]); // eslint-disable-line react-hooks/exhaustive-deps -- list load keyed by page/filters only; i18n.t in catch avoids stale closure without refetch-on-locale
 
    const handleBeforeNavigate = (id: number) => {
       flushSync(() => {
@@ -145,10 +147,10 @@ export function HomePage() {
       >
          <header className="px-4 pb-6 pt-8 text-center md:pt-10">
             <h1 className="text-5xl font-black tracking-tighter text-[var(--text-color)] md:text-6xl">
-               RICK AND <span className="text-primary">MORTY</span>
+               {t('home.hero.title')} <span className="text-primary">{t('home.hero.titleAccent')}</span>
             </h1>
             <p className="mt-4 font-medium tracking-wide text-slate-500 dark:text-slate-400">
-               EXPLORANDO O MULTIVERSO DE RICK AND MORTY
+               {t('home.hero.subtitle')}
             </p>
             <div className="mx-auto mt-6 h-1.5 w-24 rounded-full bg-primary opacity-20"></div>
          </header>
@@ -191,12 +193,9 @@ export function HomePage() {
                ) : showEmptyResults ? (
                   <div className="flex min-h-[16rem] flex-col items-center justify-center gap-2 px-4 text-center">
                      <p className="text-base font-semibold text-[var(--text-color)]">
-                        Nenhum personagem encontrado para esses filtros.
+                        {t('home.empty.title')}
                      </p>
-                     <p className="max-w-md text-sm text-muted-foreground">
-                        Ajuste o nome ou os filtros e tente de novo — a API oficial da série não encontrou resultados
-                        para esta combinação.
-                     </p>
+                     <p className="max-w-md text-sm text-muted-foreground">{t('home.empty.hint')}</p>
                   </div>
                ) : (
                   <div
@@ -228,7 +227,7 @@ export function HomePage() {
                      aria-live="polite"
                   >
                      <div className="h-10 w-10 animate-spin rounded-full border-4 border-primary border-t-transparent"></div>
-                     <p className="animate-pulse text-sm font-bold text-primary">CARREGANDO DIMENSÃO...</p>
+                     <p className="animate-pulse text-sm font-bold text-primary">{t('home.loading')}</p>
                   </div>
                ) : null}
             </div>
@@ -240,11 +239,11 @@ export function HomePage() {
                disabled={!pageInfo?.prev || loading}
                className="rounded-md border border-primary/40 px-4 py-2 text-sm font-semibold text-[var(--text-color)] transition hover:border-primary hover:text-primary disabled:cursor-not-allowed disabled:opacity-40"
             >
-               Anterior
+               {t('home.pagination.prev')}
             </button>
 
             <span className="text-sm font-semibold text-[var(--text-color)]">
-               Pagina {page} de {pageInfo?.pages ?? 1}
+               {t('home.pagination.pageOf', { current: page, total: pageInfo?.pages ?? 1 })}
             </span>
 
             <button
@@ -253,7 +252,7 @@ export function HomePage() {
                disabled={!pageInfo?.next || loading}
                className="rounded-md border border-primary/40 px-4 py-2 text-sm font-semibold text-[var(--text-color)] transition hover:border-primary hover:text-primary disabled:cursor-not-allowed disabled:opacity-40"
             >
-               Proxima
+               {t('home.pagination.next')}
             </button>
          </footer>
       </motion.div>

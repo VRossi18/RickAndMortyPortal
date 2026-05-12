@@ -1,5 +1,6 @@
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { beforeEach, describe, expect, it } from 'vitest';
+import i18n from '../i18n';
 import { ThemeToggle } from './ThemeToggle';
 
 describe('ThemeToggle', () => {
@@ -16,7 +17,7 @@ describe('ThemeToggle', () => {
          expect(document.documentElement.classList.contains('dark')).toBe(false);
       });
 
-      fireEvent.click(screen.getByRole('button', { name: /trocar tema/i }));
+      fireEvent.click(screen.getByRole('button', { name: i18n.t('theme.toggle') }));
 
       await waitFor(() => {
          expect(document.documentElement.getAttribute('data-theme')).toBe('dark');

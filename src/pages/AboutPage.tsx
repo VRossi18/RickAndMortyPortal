@@ -1,52 +1,60 @@
 import { motion } from 'framer-motion';
+import { useTranslation } from 'react-i18next';
 import {
    IconInstagram,
    IconLinkedIn,
    IconMail,
    IconMapPin,
+   IconGithub,
    IconX,
 } from '../components/about/AboutSocialIcons';
-
-const SKILLS_INTRO =
-   'Sou desenvolvedor de software com mais de nove anos de experiência construindo e evoluindo sistemas de alta performance em fintech, SaaS, jogos e sistemas de saúde. Trabalho com JavaScript, TypeScript, Node.js, React, C# e .NET, microsserviços e integrações orientadas a eventos (por exemplo RabbitMQ), além de práticas de código limpo, SOLID e pipelines de CI/CD (GitHub Actions, Jenkins). Tenho forte atuação em nuvem AWS, containers com Docker e Podman, segurança com OAuth2 e JWT, observabilidade com Datadog e desenvolvimento de jogos com Unity e Godot. Valorizo mentoria de equipes, design de arquiteturas escaláveis e colaboração ágil em times remotos.';
 
 const PORTRAIT_SRC = `${import.meta.env.BASE_URL}about/portrait.png`;
 
 const socialLinks = [
    {
       href: 'mailto:viniciusprossi18@gmail.com',
-      label: 'Email',
+      labelKey: 'social.email' as const,
       description: 'viniciusprossi18@gmail.com',
       Icon: IconMail,
       external: false as const,
    },
    {
       href: 'https://www.instagram.com/virossii/',
-      label: 'Instagram',
+      labelKey: 'social.instagram' as const,
       description: '@virossii',
       Icon: IconInstagram,
       external: true as const,
    },
    {
       href: 'https://www.linkedin.com/in/vinicius-pimenta-rossi/',
-      label: 'LinkedIn',
+      labelKey: 'social.linkedin' as const,
       description: 'in/vinicius-pimenta-rossi',
       Icon: IconLinkedIn,
       external: true as const,
    },
    {
       href: 'https://x.com/Vinicius_Rossi5',
-      label: 'X',
+      labelKey: 'social.x' as const,
       description: '@Vinicius_Rossi5',
       Icon: IconX,
+      external: true as const,
+   },
+   {
+      href: 'https://github.com/VRossi18',
+      labelKey: 'social.github' as const,
+      description: 'VRossi18',
+      Icon: IconGithub,
       external: true as const,
    },
 ] as const;
 
 export function AboutPage() {
+   const { t } = useTranslation('common');
+
    return (
       <motion.section
-         aria-label="Sobre mim"
+         aria-label={t('about.sectionAria')}
          className="min-h-[50vh] bg-[var(--bg-color)] px-4 py-10 md:py-14"
          initial={{ opacity: 0 }}
          animate={{ opacity: 1 }}
@@ -59,7 +67,7 @@ export function AboutPage() {
                   <div className="overflow-hidden rounded-2xl border border-primary/25 bg-card shadow-lg shadow-primary/10">
                      <img
                         src={PORTRAIT_SRC}
-                        alt="Retrato de Vinicius Rossi"
+                        alt={t('about.portraitAlt')}
                         className="aspect-[3/4] w-full object-cover object-top"
                         width={640}
                         height={853}
@@ -75,18 +83,20 @@ export function AboutPage() {
                      </h1>
                      <p className="flex items-center gap-2 text-sm font-semibold text-muted-foreground">
                         <IconMapPin className="text-primary" aria-hidden />
-                        <span>Brazil</span>
+                        <span>{t('about.location')}</span>
                      </p>
                   </header>
 
-                  <p className="text-base leading-relaxed text-foreground/90 md:text-lg">{SKILLS_INTRO}</p>
+                  <p className="text-base leading-relaxed text-foreground/90 md:text-lg">
+                     {t('about.skillsBody')}
+                  </p>
 
                   <div>
                      <h2 className="mb-3 text-xs font-bold uppercase tracking-widest text-muted-foreground">
-                        Contato e redes
+                        {t('about.contactHeading')}
                      </h2>
                      <ul className="grid gap-2 sm:grid-cols-2">
-                        {socialLinks.map(({ href, label, description, Icon, external }) => (
+                        {socialLinks.map(({ href, labelKey, description, Icon, external }) => (
                            <li key={href}>
                               <a
                                  href={href}
@@ -97,7 +107,9 @@ export function AboutPage() {
                               >
                                  <Icon className="text-primary" />
                                  <span className="min-w-0">
-                                    <span className="block text-sm font-bold text-foreground">{label}</span>
+                                    <span className="block text-sm font-bold text-foreground">
+                                       {t(labelKey)}
+                                    </span>
                                     <span className="block truncate text-xs text-muted-foreground">
                                        {description}
                                     </span>

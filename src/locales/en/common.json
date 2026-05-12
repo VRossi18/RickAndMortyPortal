@@ -1,0 +1,84 @@
+{
+   "nav": {
+      "ariaMain": "Main",
+      "about": "About me",
+      "characters": "Rick & Morty Characters"
+   },
+   "language": {
+      "switchToPt": "Switch language to Portuguese",
+      "switchToEn": "Switch language to English"
+   },
+   "meta": {
+      "appTitle": "Rick & Morty Portal"
+   },
+   "home": {
+      "hero": {
+         "title": "RICK AND",
+         "titleAccent": "MORTY",
+         "subtitle": "EXPLORING THE RICK AND MORTY MULTIVERSE"
+      },
+      "loading": "LOADING DIMENSION...",
+      "errorLoad": "Could not load characters for this page.",
+      "empty": {
+         "title": "No characters found for these filters.",
+         "hint": "Adjust the name or filters and try again — the show’s official API returned no results for this combination."
+      },
+      "pagination": {
+         "prev": "Previous",
+         "next": "Next",
+         "pageOf": "Page {{current}} of {{total}}"
+      }
+   },
+   "filters": {
+      "searchLabel": "Search character by name",
+      "searchPlaceholder": "Search by name (e.g. Rick, Morty)...",
+      "statusLabel": "Status",
+      "statusAll": "Status (all)",
+      "genderLabel": "Gender",
+      "genderAll": "Gender (all)",
+      "advancedShow": "Advanced filters",
+      "advancedHide": "Hide advanced filters",
+      "clear": "Clear filters",
+      "species": "Species",
+      "type": "Type",
+      "speciesPlaceholder": "e.g. Human",
+      "typePlaceholder": "e.g. empty or Parasite"
+   },
+   "characterDetail": {
+      "back": "Back to portal",
+      "loading": "OPENING DIMENSION...",
+      "errorInvalidId": "Invalid ID.",
+      "errorNotFound": "Character not found.",
+      "errorLoadFailed": "Could not load this character.",
+      "fieldType": "Type",
+      "fieldGender": "Gender",
+      "fieldOrigin": "Origin",
+      "fieldLocation": "Current location",
+      "fieldEpisodes": "Episodes (API URLs)",
+      "fieldCreated": "Created",
+      "episodeCount_one": "{{count}} episode",
+      "episodeCount_other": "{{count}} episodes"
+   },
+   "card": {
+      "ariaViewDetails": "View details for {{name}}",
+      "origin": "Origin:",
+      "location": "Location:"
+   },
+   "theme": {
+      "toggle": "Toggle theme"
+   },
+   "about": {
+      "sectionAria": "About me",
+      "portraitAlt": "Portrait of Vinicius Rossi",
+      "location": "Brazil",
+      "contactHeading": "Contact and social",
+      "skillsBody": "I am a software developer with over nine years of experience building and evolving high-performance systems in fintech, SaaS, gaming, and health insurance. I work with JavaScript, TypeScript, Node.js, React, C# and .NET, microservices, and event-driven integrations (for example RabbitMQ), as well as clean code, SOLID, and CI/CD pipelines (GitHub Actions, Jenkins). I have strong experience with AWS cloud, Docker and Podman containers, security with OAuth2 and JWT, observability with Datadog, and game development with Unity and Godot. I value mentoring teams, designing scalable architectures, and agile collaboration in remote teams."
+   },
+   "social": {
+      "email": "Email",
+      "instagram": "Instagram",
+      "linkedin": "LinkedIn",
+      "x": "X",
+      "github": "GitHub"
+   }
+}

@@ -39,4 +39,10 @@ describe('AppNavbar', () => {
       const about = screen.getByRole('link', { name: 'Sobre mim' });
       expect(about.className).toMatch(/border-primary/);
    });
+
+   it('renders language switcher with accessible flag buttons', () => {
+      renderShell('/characters');
+      expect(screen.getByRole('button', { name: /Mudar idioma para português/i })).toBeInTheDocument();
+      expect(screen.getByRole('button', { name: /Mudar idioma para inglês/i })).toBeInTheDocument();
+   });
 });

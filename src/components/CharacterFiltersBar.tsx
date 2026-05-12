@@ -1,3 +1,5 @@
+import { useTranslation } from 'react-i18next';
+
 interface CharacterFiltersBarProps {
    nameDraft: string;
    onNameDraftChange: (value: string) => void;
@@ -31,18 +33,20 @@ export function CharacterFiltersBar({
    onClearFilters,
    hasActiveFilters,
 }: CharacterFiltersBarProps) {
+   const { t } = useTranslation('common');
+
    return (
       <div className="mx-auto mb-10 max-w-3xl space-y-4">
          <div className="space-y-2">
             <label htmlFor="character-search" className="sr-only">
-               Buscar personagem por nome
+               {t('filters.searchLabel')}
             </label>
             <input
                id="character-search"
                type="search"
                value={nameDraft}
                onChange={(e) => onNameDraftChange(e.target.value)}
-               placeholder="Buscar por nome (ex.: Rick, Morty)..."
+               placeholder={t('filters.searchPlaceholder')}
                autoComplete="off"
                className="w-full rounded-xl border border-primary/40 bg-[var(--bg-color)] px-4 py-3 text-sm font-medium text-[var(--text-color)] shadow-sm outline-none ring-primary/30 transition placeholder:text-muted-foreground focus:border-primary focus:ring-2"
             />
@@ -50,7 +54,7 @@ export function CharacterFiltersBar({
 
          <div className="flex flex-wrap items-center gap-3">
             <label className="sr-only" htmlFor="filter-status">
-               Status
+               {t('filters.statusLabel')}
             </label>
             <select
                id="filter-status"
@@ -58,14 +62,14 @@ export function CharacterFiltersBar({
                onChange={(e) => onStatusChange(e.target.value)}
                className="min-w-[8.5rem] flex-1 rounded-lg border border-primary/40 bg-[var(--bg-color)] px-3 py-2 text-sm font-semibold text-[var(--text-color)] outline-none ring-primary/30 focus:border-primary focus:ring-2 sm:flex-none"
             >
-               <option value="">Status (todos)</option>
+               <option value="">{t('filters.statusAll')}</option>
                <option value="alive">Alive</option>
                <option value="dead">Dead</option>
                <option value="unknown">Unknown</option>
             </select>
 
             <label className="sr-only" htmlFor="filter-gender">
-               Gênero
+               {t('filters.genderLabel')}
             </label>
             <select
                id="filter-gender"
@@ -73,7 +77,7 @@ export function CharacterFiltersBar({
                onChange={(e) => onGenderChange(e.target.value)}
                className="min-w-[9.5rem] flex-1 rounded-lg border border-primary/40 bg-[var(--bg-color)] px-3 py-2 text-sm font-semibold text-[var(--text-color)] outline-none ring-primary/30 focus:border-primary focus:ring-2 sm:flex-none"
             >
-               <option value="">Gênero (todos)</option>
+               <option value="">{t('filters.genderAll')}</option>
                <option value="female">Female</option>
                <option value="male">Male</option>
                <option value="genderless">Genderless</option>
@@ -85,7 +89,7 @@ export function CharacterFiltersBar({
                onClick={() => onAdvancedOpenChange(!advancedOpen)}
                className="rounded-lg border border-primary/40 px-3 py-2 text-sm font-semibold text-primary transition hover:border-primary hover:bg-primary/10"
             >
-               {advancedOpen ? 'Ocultar filtros avançados' : 'Filtros avançados'}
+               {advancedOpen ? t('filters.advancedHide') : t('filters.advancedShow')}
             </button>
 
             <button
@@ -94,7 +98,7 @@ export function CharacterFiltersBar({
                disabled={!hasActiveFilters}
                className="rounded-lg border border-border px-3 py-2 text-sm font-semibold text-muted-foreground transition hover:border-destructive/50 hover:bg-destructive/10 hover:text-destructive disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:border-border disabled:hover:bg-transparent disabled:hover:text-muted-foreground"
             >
-               Limpar filtros
+               {t('filters.clear')}
             </button>
          </div>
 
@@ -105,14 +109,14 @@ export function CharacterFiltersBar({
                      htmlFor="filter-species"
                      className="text-xs font-bold uppercase tracking-wide text-muted-foreground"
                   >
-                     Espécies
+                     {t('filters.species')}
                   </label>
                   <input
                      id="filter-species"
                      type="text"
                      value={species}
                      onChange={(e) => onSpeciesChange(e.target.value)}
-                     placeholder="ex.: Human"
+                     placeholder={t('filters.speciesPlaceholder')}
                      className="w-full rounded-lg border border-primary/40 bg-[var(--bg-color)] px-3 py-2 text-sm text-[var(--text-color)] outline-none focus:border-primary focus:ring-2 focus:ring-primary/30"
                   />
                </div>
@@ -121,14 +125,14 @@ export function CharacterFiltersBar({
                      htmlFor="filter-type"
                      className="text-xs font-bold uppercase tracking-wide text-muted-foreground"
                   >
-                     Tipo
+                     {t('filters.type')}
                   </label>
                   <input
                      id="filter-type"
                      type="text"
                      value={type}
                      onChange={(e) => onTypeChange(e.target.value)}
-                     placeholder="ex.: vazio ou Parasite"
+                     placeholder={t('filters.typePlaceholder')}
                      className="w-full rounded-lg border border-primary/40 bg-[var(--bg-color)] px-3 py-2 text-sm text-[var(--text-color)] outline-none focus:border-primary focus:ring-2 focus:ring-primary/30"
                   />
                </div>

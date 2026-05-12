@@ -1,20 +1,17 @@
 import { isAxiosError } from 'axios';
 import { motion } from 'framer-motion';
 import { useEffect, useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Link, useLocation, useParams } from 'react-router-dom';
 import { CharacterService } from '../services/characters';
 import type { Character } from '../types/api';
 import type { CharacterLocationState } from '../types/navigation';
 
-function formatDate(iso: string) {
-   try {
-      return new Date(iso).toLocaleString();
-   } catch {
-      return iso;
-   }
-}
+type DetailErrorKey = 'invalidId' | 'notFound' | 'loadFailed';
+type FetchErrorKey = Exclude<DetailErrorKey, 'invalidId'>;
 
 export function CharacterDetailPage() {
+   const { t, i18n } = useTranslation('common');
    const { id: idParam } = useParams();
    const location = useLocation();
    const portal = (location.state as CharacterLocationState | null)?.portal;
@@ -28,7 +25,19 @@ export function CharacterDetailPage() {
 
    const [character, setCharacter] = useState<Character | null>(null);
    const [loading, setLoading] = useState(() => !invalidId);
-   const [error, setError] = useState<string | null>(() => (invalidId ? 'ID invalido.' : null));
+   const [fetchErrorKey, setFetchErrorKey] = useState<FetchErrorKey | null>(null);
+
+   const errorKey: DetailErrorKey | null = invalidId ? 'invalidId' : fetchErrorKey;
+
+   const dateLocale = i18n.language.startsWith('en') ? 'en-US' : 'pt-BR';
+
+   const formatDate = (iso: string) => {
+      try {
+         return new Date(iso).toLocaleString(dateLocale);
+      } catch {
+         return iso;
+      }
+   };
 
    useEffect(() => {
       if (invalidId) {
@@ -39,7 +48,7 @@ export function CharacterDetailPage() {
 
       const load = async () => {
          setLoading(true);
-         setError(null);
+         setFetchErrorKey(null);
          try {
             const data = await CharacterService.getCharacterById(id);
             if (!isMounted) return;
@@ -47,9 +56,9 @@ export function CharacterDetailPage() {
          } catch (err) {
             if (!isMounted) return;
             if (isAxiosError(err) && err.response?.status === 404) {
-               setError('Personagem nao encontrado.');
+               setFetchErrorKey('notFound');
             } else {
-               setError('Nao foi possivel carregar este personagem.');
+               setFetchErrorKey('loadFailed');
             }
             setCharacter(null);
          } finally {
@@ -98,7 +107,7 @@ export function CharacterDetailPage() {
                   to="/characters"
                   className="inline-flex w-fit items-center gap-2 rounded-md border border-primary/40 px-3 py-2 text-sm font-semibold text-primary transition hover:border-primary hover:bg-primary/10"
                >
-                  Voltar ao portal
+                  {t('characterDetail.back')}
                </Link>
             </div>
 
@@ -106,10 +115,16 @@ export function CharacterDetailPage() {
                {loading ? (
                   <div className="flex flex-col items-center justify-center gap-4 py-24">
                      <div className="h-10 w-10 animate-spin rounded-full border-4 border-primary border-t-transparent" />
-                     <p className="text-sm font-bold text-primary">ABRINDO DIMENSÃO...</p>
+                     <p className="text-sm font-bold text-primary">{t('characterDetail.loading')}</p>
                   </div>
-               ) : error ? (
-                  <p className="py-16 text-center text-sm font-bold text-red-500">{error}</p>
+               ) : errorKey ? (
+                  <p className="py-16 text-center text-sm font-bold text-red-500">
+                     {errorKey === 'invalidId'
+                        ? t('characterDetail.errorInvalidId')
+                        : errorKey === 'notFound'
+                          ? t('characterDetail.errorNotFound')
+                          : t('characterDetail.errorLoadFailed')}
+                  </p>
                ) : character ? (
                   <div className="flex flex-col gap-10 md:flex-row md:items-start">
                      <div className="mx-auto w-full max-w-sm shrink-0 overflow-hidden rounded-2xl border border-primary/25 bg-card shadow-lg shadow-primary/10 md:mx-0">
@@ -139,7 +154,7 @@ export function CharacterDetailPage() {
                         <dl className="grid gap-4 text-sm sm:grid-cols-2">
                            <div className="rounded-xl border border-border/60 bg-card/40 p-4">
                               <dt className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-                                 Tipo
+                                 {t('characterDetail.fieldType')}
                               </dt>
                               <dd className="mt-1 font-medium text-foreground">
                                  {character.type || '—'}
@@ -147,7 +162,7 @@ export function CharacterDetailPage() {
                            </div>
                            <div className="rounded-xl border border-border/60 bg-card/40 p-4">
                               <dt className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-                                 Gênero
+                                 {t('characterDetail.fieldGender')}
                               </dt>
                               <dd className="mt-1 font-medium text-foreground">
                                  {character.gender}
@@ -155,7 +170,7 @@ export function CharacterDetailPage() {
                            </div>
                            <div className="rounded-xl border border-border/60 bg-card/40 p-4 sm:col-span-2">
                               <dt className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-                                 Origem
+                                 {t('characterDetail.fieldOrigin')}
                               </dt>
                               <dd className="mt-1 font-medium text-foreground">
                                  {character.origin.name}
@@ -163,7 +178,7 @@ export function CharacterDetailPage() {
                            </div>
                            <div className="rounded-xl border border-border/60 bg-card/40 p-4 sm:col-span-2">
                               <dt className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-                                 Local atual
+                                 {t('characterDetail.fieldLocation')}
                               </dt>
                               <dd className="mt-1 font-medium text-foreground">
                                  {character.location.name}
@@ -171,15 +186,17 @@ export function CharacterDetailPage() {
                            </div>
                            <div className="rounded-xl border border-border/60 bg-card/40 p-4 sm:col-span-2">
                               <dt className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-                                 Episódios (URLs na API)
+                                 {t('characterDetail.fieldEpisodes')}
                               </dt>
                               <dd className="mt-1 font-medium text-foreground">
-                                 {character.episode.length} episódio(s)
+                                 {t('characterDetail.episodeCount', {
+                                    count: character.episode.length,
+                                 })}
                               </dd>
                            </div>
                            <div className="rounded-xl border border-border/60 bg-card/40 p-4 sm:col-span-2">
                               <dt className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-                                 Criado em
+                                 {t('characterDetail.fieldCreated')}
                               </dt>
                               <dd className="mt-1 font-medium text-foreground">
                                  {formatDate(character.created)}

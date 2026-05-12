@@ -3,6 +3,7 @@ import type { ReactElement } from 'react';
 import { MemoryRouter } from 'react-router-dom';
 import { describe, expect, it } from 'vitest';
 import type { Character } from '../types/api';
+import i18n from '../i18n';
 import { CharacterCard } from './CharacterCard';
 
 const character: Character = {
@@ -39,13 +40,17 @@ describe('CharacterCard', () => {
 
    it('uses pointer cursor on the interactive card', () => {
       renderWithRouter(<CharacterCard character={character} />);
-      const link = screen.getByRole('link', { name: /Ver detalhes de Rick Sanchez/ });
+      const link = screen.getByRole('link', {
+         name: i18n.t('card.ariaViewDetails', { name: 'Rick Sanchez' }),
+      });
       expect(link).toHaveClass('cursor-pointer');
    });
 
    it('sets pointer CSS variables on mouse move', () => {
       renderWithRouter(<CharacterCard character={character} />);
-      const card = screen.getByRole('link', { name: /Ver detalhes de Rick Sanchez/ });
+      const card = screen.getByRole('link', {
+         name: i18n.t('card.ariaViewDetails', { name: 'Rick Sanchez' }),
+      });
       fireEvent.mouseMove(card, { clientX: 42, clientY: 24 });
       expect(card).toHaveStyle({ '--mx': '42px', '--my': '24px' });
    });
