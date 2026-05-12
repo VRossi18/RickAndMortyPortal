@@ -12,8 +12,8 @@ on:
       branches: [main]
 
 jobs:
-   install-and-test:
-      name: install-and-test
+   lint-and-test:
+      name: Lint and test
       runs-on: ubuntu-latest
       steps:
          - name: checkout
@@ -29,10 +29,11 @@ jobs:
          - name: install dependencies, test and audit
            run: |
               pnpm install
-              pnpm run test
+              pnpm lint
+              pnpm test
    build-and-audit:
       name: build-and-audit
-      needs: install-and-test
+      needs: lint-and-test
       runs-on: ubuntu-latest
       steps:
          - name: checkout
