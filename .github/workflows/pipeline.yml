@@ -1,8 +1,9 @@
-name: build and deploy
+name: Pipeline
 
 env:
    NODE_VERSION: '24.15.0'
    PACKAGE_MANAGER: 'pnpm'
+   PACKAGE_MANAGER_VERSION: '10.15.0'
 
 on:
    push:
@@ -20,11 +21,11 @@ jobs:
          - name: install node
            uses: actions/setup-node@v4
            with:
-              node-version: '24.15.0'
+              node-version: ${{ env.NODE_VERSION }}
          - name: install pnpm (package manager)
            uses: pnpm/action-setup@v4
            with:
-              version: 10.15.0
+              version: ${{ env.PACKAGE_MANAGER_VERSION }}
          - name: install dependencies, test and audit
            run: |
               pnpm install
