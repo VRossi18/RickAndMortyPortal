@@ -22,7 +22,7 @@ describe('AppNavbar', () => {
    it('renders both tabs', () => {
       renderShell('/characters');
       expect(screen.getByRole('link', { name: 'Sobre mim' })).toHaveAttribute('href', '/about');
-      expect(screen.getByRole('link', { name: 'Rick & Morty personagens' })).toHaveAttribute(
+      expect(screen.getByRole('link', { name: 'Rick & Morty Personagens' })).toHaveAttribute(
          'href',
          '/characters',
       );
@@ -30,7 +30,7 @@ describe('AppNavbar', () => {
 
    it('marks the characters tab active on /characters', () => {
       renderShell('/characters');
-      const chars = screen.getByRole('link', { name: 'Rick & Morty personagens' });
+      const chars = screen.getByRole('link', { name: 'Rick & Morty Personagens' });
       expect(chars.className).toMatch(/border-primary/);
    });
 
@@ -42,7 +42,9 @@ describe('AppNavbar', () => {
 
    it('renders language switcher with accessible flag buttons', () => {
       renderShell('/characters');
-      expect(screen.getByRole('button', { name: /Mudar idioma para português/i })).toBeInTheDocument();
+      expect(
+         screen.getByRole('button', { name: /Mudar idioma para português/i }),
+      ).toBeInTheDocument();
       expect(screen.getByRole('button', { name: /Mudar idioma para inglês/i })).toBeInTheDocument();
    });
 });

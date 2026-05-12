@@ -59,6 +59,7 @@ Workflow file: [`.github/workflows/pipeline.yml`](.github/workflows/pipeline.yml
 - **Routing / motion:** React Router 7, Framer Motion (shared `layoutId` on the character image, `AnimatePresence` between routes)
 - **Styling:** Tailwind CSS 4, FlyonUI, `clsx` / `tailwind-merge`
 - **Data:** Axios (`GET /character` for lists, `GET /character/:id` for details — see [`CharacterService`](src/services/characters.ts))
+- **i18n:** `i18next` + `react-i18next`, copy in [`src/locales/pt/common.json`](src/locales/pt/common.json) / [`src/locales/en/common.json`](src/locales/en/common.json), bootstrap in [`src/i18n.ts`](src/i18n.ts)
 - **Quality:** ESLint (flat config), Vitest, Testing Library, jsdom
 
 ---
@@ -66,10 +67,13 @@ Workflow file: [`.github/workflows/pipeline.yml`](.github/workflows/pipeline.yml
 ## Current features
 
 - Paginated grid of characters from the public API
+- **Filters** — search by name (debounced), status, gender, and optional advanced fields (species, type); wired to [`CharacterService.getCharacters`](src/services/characters.ts)
 - **Click a card** (`cursor: pointer`) to open **`/character/:id`**, with a short “portal” feel: other cards dim / ease aside, the image **animates into** the detail layout, and an optional radial overlay uses the click origin when navigation passes `location.state`
 - **Character detail** page: full fields from the API (status, species, type, gender, origin, location, episode count, created), loading and error handling (including 404)
 - **Back** link to the home grid
 - Loading and error states on the list
+- **About me** page at **`/about`** (author bio, portrait, contact / social links)
+- **Internationalization (PT / EN)** — UI strings live in locale JSON; language is stored in **`localStorage`** (`portal.locale`, default `pt`); **`document.documentElement.lang`** stays in sync; **navbar flag switcher** ([`LanguageSwitcher`](src/components/LanguageSwitcher.tsx))
 - Light / dark theme toggle
 - Responsive layout
 - **`import.meta.env.BASE_URL`** as the router `basename` in production so asset paths and routes stay correct under a GitHub Pages project URL (see [`vite.config.ts`](vite.config.ts))
@@ -78,8 +82,7 @@ Workflow file: [`.github/workflows/pipeline.yml`](.github/workflows/pipeline.yml
 
 ## Roadmap
 
-1. **About me** — dedicated page introducing the author / project story  
-2. **Search** — filter or find characters via a text input (list endpoint already supports filters in [`CharacterService.getCharacters`](src/services/characters.ts))
+1. **Rick and Morty tabletop RPG** — tie the portal to the *Rick and Morty* RPG (e.g. reference tables, dimension / gear ideas, or a small “session tools” area) without replacing the API-driven character browser
 
 ---
 
