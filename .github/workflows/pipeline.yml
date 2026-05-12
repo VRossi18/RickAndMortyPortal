@@ -37,6 +37,7 @@ jobs:
               version: ${{ env.PACKAGE_MANAGER_VERSION }}
          - name: Test and audit
            run: |
+              pnpm install
               pnpm lint
               pnpm test
 
