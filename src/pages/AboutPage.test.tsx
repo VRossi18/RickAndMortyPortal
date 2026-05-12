@@ -12,7 +12,7 @@ describe('AboutPage', () => {
       render(<AboutPage />);
       expect(screen.getByRole('img', { name: /Retrato de Vinicius Rossi/i })).toHaveAttribute(
          'src',
-         '/about/portrait.png',
+         `${import.meta.env.BASE_URL}about/portrait.png`,
       );
    });
 

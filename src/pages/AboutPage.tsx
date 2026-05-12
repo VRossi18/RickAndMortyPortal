@@ -10,7 +10,7 @@ import {
 const SKILLS_INTRO =
    'Sou desenvolvedor de software com mais de nove anos de experiência construindo e evoluindo sistemas de alta performance em fintech, SaaS, jogos e sistemas de saúde. Trabalho com JavaScript, TypeScript, Node.js, React, C# e .NET, microsserviços e integrações orientadas a eventos (por exemplo RabbitMQ), além de práticas de código limpo, SOLID e pipelines de CI/CD (GitHub Actions, Jenkins). Tenho forte atuação em nuvem AWS, containers com Docker e Podman, segurança com OAuth2 e JWT, observabilidade com Datadog e desenvolvimento de jogos com Unity e Godot. Valorizo mentoria de equipes, design de arquiteturas escaláveis e colaboração ágil em times remotos.';
 
-const PORTRAIT_SRC = '/about/portrait.png';
+const PORTRAIT_SRC = `${import.meta.env.BASE_URL}about/portrait.png`;
 
 const socialLinks = [
    {
