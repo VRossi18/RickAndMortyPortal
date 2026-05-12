@@ -35,14 +35,13 @@ jobs:
            uses: pnpm/action-setup@v4
            with:
               version: ${{ env.PACKAGE_MANAGER_VERSION }}
-         - name: install dependencies, test and audit
+         - name: Test and audit
            run: |
-              pnpm install
               pnpm lint
               pnpm test
 
-   build-and-audit:
-      name: Build and audit
+   build-audit-package:
+      name: Build, audit and package
       needs: lint-and-test
       runs-on: ubuntu-latest
       steps:
@@ -56,7 +55,7 @@ jobs:
            uses: pnpm/action-setup@v4
            with:
               version: 10.15.0
-         - name: install dependencies, build and audit
+         - name: Build and audit
            run: |
               pnpm install
               pnpm run build
@@ -69,7 +68,7 @@ jobs:
 
    deploy-pages:
       name: Deploy GitHub Pages
-      needs: build-and-audit
+      needs: build-audit-package
       runs-on: ubuntu-latest
       if: github.ref == 'refs/heads/main' && github.event_name == 'push'
       environment:

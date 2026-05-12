@@ -1,36 +1,64 @@
 import api from './api';
 import type { ApiResponse, Character } from '../types/api';
 
-type CharacterFilters = {
+/**
+ * Filtros da listagem (UI). `status` e `gender` são enviados em minúsculas à API,
+ * conforme https://rickandmortyapi.com/documentation/#character-schema
+ */
+export type CharacterListFilters = {
    name?: string;
-   status?: Character['status'];
+   status?: string;
+   gender?: string;
    species?: string;
    type?: string;
-   gender?: Character['gender'];
 };
+
+function toApiParams(page: number, filters: CharacterListFilters): Record<string, string | number> {
+   const params: Record<string, string | number> = { page };
+
+   const name = filters.name?.trim();
+   if (name) {
+      params.name = name;
+   }
+
+   const species = filters.species?.trim();
+   if (species) {
+      params.species = species;
+   }
+
+   const type = filters.type?.trim();
+   if (type) {
+      params.type = type;
+   }
+
+   const status = filters.status?.trim();
+   if (status) {
+      params.status = status.toLowerCase();
+   }
+
+   const gender = filters.gender?.trim();
+   if (gender) {
+      params.gender = gender.toLowerCase();
+   }
+
+   return params;
+}
 
 export const CharacterService = {
    /**
-    * Obtém uma lista paginada de personagens.
-    * @param page Número da página (padrão 1)
-    * @param filters Objeto opcional com filtros (name, status, species, etc)
+    * Lista paginada de personagens com filtros opcionais da API oficial.
     */
    getCharacters: async (
       page: number,
-      filters: CharacterFilters = {},
+      filters: CharacterListFilters = {},
    ): Promise<ApiResponse<Character>> => {
-      const params = {
-         page,
-         ...filters,
-      };
-
+      const params = toApiParams(page, filters);
       const { data } = await api.get<ApiResponse<Character>>('/character', { params });
       return data;
    },
 
    /**
     * Obtém os detalhes de um único personagem pelo ID.
-    * @param id ID numérico do personagem
     */
    getCharacterById: async (id: number): Promise<Character> => {
       const { data } = await api.get<Character>(`/character/${id}`);
@@ -39,7 +67,6 @@ export const CharacterService = {
 
    /**
     * Obtém múltiplos personagens simultaneamente através de um array de IDs.
-    * Útil para carregar personagens favoritos ou específicos de uma vez.
     */
    getMultipleCharacters: async (ids: number[]): Promise<Character[]> => {
       const { data } = await api.get<Character[]>(`/character/${ids.join(',')}`);

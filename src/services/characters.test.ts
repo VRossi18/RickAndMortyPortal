@@ -21,11 +21,30 @@ describe('CharacterService', () => {
       mockedGet.mockReset();
    });
 
-   it('getCharacters sends page and optional filters as params', async () => {
+   it('getCharacters sends page and filters with status and gender in lowercase for the API', async () => {
       mockedGet.mockResolvedValue({ data: emptyList });
-      await CharacterService.getCharacters(2, { name: 'Rick', status: 'Alive' });
+      await CharacterService.getCharacters(2, {
+         name: 'Rick',
+         status: 'Alive',
+         gender: 'Male',
+         species: 'Human',
+      });
       expect(mockedGet).toHaveBeenCalledWith('/character', {
-         params: { page: 2, name: 'Rick', status: 'Alive' },
+         params: { page: 2, name: 'Rick', status: 'alive', gender: 'male', species: 'Human' },
+      });
+   });
+
+   it('getCharacters omits empty or whitespace-only filter fields', async () => {
+      mockedGet.mockResolvedValue({ data: emptyList });
+      await CharacterService.getCharacters(1, {
+         name: '   ',
+         status: '',
+         gender: '   ',
+         species: '',
+         type: '  ',
+      });
+      expect(mockedGet).toHaveBeenCalledWith('/character', {
+         params: { page: 1 },
       });
    });
 

@@ -1,9 +1,13 @@
+import { isAxiosError } from 'axios';
 import { motion } from 'framer-motion';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { flushSync } from 'react-dom';
 import { CharacterCard } from '../components/CharacterCard';
-import { CharacterService } from '../services/characters';
+import { CharacterFiltersBar } from '../components/CharacterFiltersBar';
+import { CharacterService, type CharacterListFilters } from '../services/characters';
 import type { Character, Info } from '../types/api';
+
+const emptyInfo: Info = { count: 0, pages: 1, next: null, prev: null };
 
 export function HomePage() {
    const [characters, setCharacters] = useState<Character[]>([]);
@@ -11,14 +15,62 @@ export function HomePage() {
    const [page, setPage] = useState(1);
    const [pageInfo, setPageInfo] = useState<Info | null>(null);
    const [error, setError] = useState<string | null>(null);
-   /** Card em foco durante a transição: afasta/dimui os outros antes da navegação. */
    const [transitionFocusId, setTransitionFocusId] = useState<number | null>(null);
 
-   const handleBeforeNavigate = (id: number) => {
-      flushSync(() => {
-         setTransitionFocusId(id);
-      });
+   const [nameDraft, setNameDraft] = useState('');
+   const [appliedName, setAppliedName] = useState('');
+   const lastCommittedName = useRef('');
+
+   const [status, setStatus] = useState('');
+   const [gender, setGender] = useState('');
+   const [species, setSpecies] = useState('');
+   const [type, setType] = useState('');
+   const [advancedOpen, setAdvancedOpen] = useState(false);
+
+   const hasActiveFilters = useMemo(
+      () =>
+         nameDraft.trim() !== '' ||
+         status !== '' ||
+         gender !== '' ||
+         species.trim() !== '' ||
+         type.trim() !== '',
+      [nameDraft, status, gender, species, type],
+   );
+
+   const clearAllFilters = () => {
+      lastCommittedName.current = '';
+      setNameDraft('');
+      setAppliedName('');
+      setStatus('');
+      setGender('');
+      setSpecies('');
+      setType('');
+      setAdvancedOpen(false);
+      setPage(1);
    };
+
+   useEffect(() => {
+      const id = window.setTimeout(() => {
+         const next = nameDraft.trim();
+         if (lastCommittedName.current !== next) {
+            lastCommittedName.current = next;
+            setAppliedName(next);
+            setPage(1);
+         }
+      }, 380);
+      return () => window.clearTimeout(id);
+   }, [nameDraft]);
+
+   const listFilters: CharacterListFilters = useMemo(
+      () => ({
+         ...(appliedName ? { name: appliedName } : {}),
+         ...(status ? { status } : {}),
+         ...(gender ? { gender } : {}),
+         ...(species.trim() ? { species: species.trim() } : {}),
+         ...(type.trim() ? { type: type.trim() } : {}),
+      }),
+      [appliedName, status, gender, species, type],
+   );
 
    useEffect(() => {
       let isMounted = true;
@@ -28,7 +80,7 @@ export function HomePage() {
          setError(null);
 
          try {
-            const data = await CharacterService.getCharacters(page);
+            const data = await CharacterService.getCharacters(page, listFilters);
 
             if (!isMounted) {
                return;
@@ -37,8 +89,16 @@ export function HomePage() {
             setCharacters(data.results);
             setPageInfo(data.info);
          } catch (err) {
-            console.error('Erro ao carregar personagens:', err);
-            if (isMounted) {
+            if (!isMounted) {
+               return;
+            }
+
+            if (isAxiosError(err) && err.response?.status === 404) {
+               setCharacters([]);
+               setPageInfo(emptyInfo);
+               setError(null);
+            } else {
+               console.error('Erro ao carregar personagens:', err);
                setError('Nao foi possivel carregar os personagens desta pagina.');
             }
          } finally {
@@ -48,12 +108,18 @@ export function HomePage() {
          }
       };
 
-      loadData();
+      void loadData();
 
       return () => {
          isMounted = false;
       };
-   }, [page]);
+   }, [page, listFilters]);
+
+   const handleBeforeNavigate = (id: number) => {
+      flushSync(() => {
+         setTransitionFocusId(id);
+      });
+   };
 
    const goToPreviousPage = () => {
       if (pageInfo?.prev) {
@@ -67,6 +133,8 @@ export function HomePage() {
       }
    };
 
+   const showEmptyResults = !loading && !error && characters.length === 0;
+
    return (
       <motion.div
          className="min-h-screen bg-[var(--bg-color)] transition-colors duration-300"
@@ -75,48 +143,95 @@ export function HomePage() {
          exit={{ opacity: 0 }}
          transition={{ duration: 0.28, ease: 'easeOut' }}
       >
-         <header className="pt-8 pb-12 px-4 text-center md:pt-10">
-            <h1 className="text-5xl md:text-6xl font-black tracking-tighter text-[var(--text-color)]">
+         <header className="px-4 pb-6 pt-8 text-center md:pt-10">
+            <h1 className="text-5xl font-black tracking-tighter text-[var(--text-color)] md:text-6xl">
                RICK AND <span className="text-primary">MORTY</span>
             </h1>
-            <p className="mt-4 text-slate-500 dark:text-slate-400 font-medium tracking-wide">
+            <p className="mt-4 font-medium tracking-wide text-slate-500 dark:text-slate-400">
                EXPLORANDO O MULTIVERSO DE RICK AND MORTY
             </p>
-            <div className="mt-6 w-24 h-1.5 bg-primary mx-auto rounded-full opacity-20"></div>
+            <div className="mx-auto mt-6 h-1.5 w-24 rounded-full bg-primary opacity-20"></div>
          </header>
 
-         <main className="max-w-[1400px] mx-auto px-6 pb-20">
-            {loading ? (
-               <div className="flex flex-col items-center justify-center h-80 gap-4">
-                  <div className="w-10 h-10 border-4 border-primary border-t-transparent rounded-full animate-spin"></div>
-                  <p className="text-sm font-bold text-primary animate-pulse">
-                     CARREGANDO DIMENSÃO...
-                  </p>
-               </div>
-            ) : error ? (
-               <div className="flex items-center justify-center h-80">
-                  <p className="text-sm font-bold text-red-500">{error}</p>
-               </div>
-            ) : (
-               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-                  {characters.map((char) => {
-                     const interaction =
-                        transitionFocusId === null
-                           ? 'normal'
-                           : transitionFocusId === char.id
-                             ? 'source'
-                             : 'dimmed';
-                     return (
-                        <CharacterCard
-                           key={char.id}
-                           character={char}
-                           interaction={interaction}
-                           onBeforeNavigate={handleBeforeNavigate}
-                        />
-                     );
-                  })}
-               </div>
-            )}
+         <main className="mx-auto max-w-[1400px] px-6 pb-20">
+            <CharacterFiltersBar
+               nameDraft={nameDraft}
+               onNameDraftChange={setNameDraft}
+               status={status}
+               onStatusChange={(v) => {
+                  setStatus(v);
+                  setPage(1);
+               }}
+               gender={gender}
+               onGenderChange={(v) => {
+                  setGender(v);
+                  setPage(1);
+               }}
+               species={species}
+               onSpeciesChange={(v) => {
+                  setSpecies(v);
+                  setPage(1);
+               }}
+               type={type}
+               onTypeChange={(v) => {
+                  setType(v);
+                  setPage(1);
+               }}
+               advancedOpen={advancedOpen}
+               onAdvancedOpenChange={setAdvancedOpen}
+               hasActiveFilters={hasActiveFilters}
+               onClearFilters={clearAllFilters}
+            />
+
+            <div className="relative min-h-[20rem]">
+               {error ? (
+                  <div className="flex h-80 items-center justify-center">
+                     <p className="text-sm font-bold text-red-500">{error}</p>
+                  </div>
+               ) : showEmptyResults ? (
+                  <div className="flex min-h-[16rem] flex-col items-center justify-center gap-2 px-4 text-center">
+                     <p className="text-base font-semibold text-[var(--text-color)]">
+                        Nenhum personagem encontrado para esses filtros.
+                     </p>
+                     <p className="max-w-md text-sm text-muted-foreground">
+                        Ajuste o nome ou os filtros e tente de novo — a API oficial da série não encontrou resultados
+                        para esta combinação.
+                     </p>
+                  </div>
+               ) : (
+                  <div
+                     className={`grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4 ${loading ? 'pointer-events-none opacity-45' : ''}`}
+                  >
+                     {characters.map((char) => {
+                        const interaction =
+                           transitionFocusId === null
+                              ? 'normal'
+                              : transitionFocusId === char.id
+                                ? 'source'
+                                : 'dimmed';
+                        return (
+                           <CharacterCard
+                              key={char.id}
+                              character={char}
+                              interaction={interaction}
+                              onBeforeNavigate={handleBeforeNavigate}
+                           />
+                        );
+                     })}
+                  </div>
+               )}
+
+               {loading ? (
+                  <div
+                     className="absolute inset-0 z-10 flex flex-col items-center justify-center gap-4 rounded-xl bg-[var(--bg-color)]/75 backdrop-blur-[2px]"
+                     aria-busy="true"
+                     aria-live="polite"
+                  >
+                     <div className="h-10 w-10 animate-spin rounded-full border-4 border-primary border-t-transparent"></div>
+                     <p className="animate-pulse text-sm font-bold text-primary">CARREGANDO DIMENSÃO...</p>
+                  </div>
+               ) : null}
+            </div>
          </main>
          <footer className="flex items-center justify-center gap-4 pb-8">
             <button
