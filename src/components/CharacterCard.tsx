@@ -1,7 +1,6 @@
 import { motion } from 'framer-motion';
 import { useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { characterImageLayoutId } from '../lib/characterLayout';
 import type { Character } from '../types/api';
 import type { CharacterLocationState } from '../types/navigation';
 
@@ -60,20 +59,18 @@ export function CharacterCard({ character, interaction = 'normal', onBeforeNavig
    return (
       <motion.div
          ref={ref}
-         layout
          role="link"
          tabIndex={0}
          aria-label={`Ver detalhes de ${character.name}`}
          animate={interactionMotion}
-         transition={{ type: 'spring', stiffness: 420, damping: 34 }}
+         transition={{ duration: 0.22, ease: 'easeOut' }}
          onMouseMove={handleMove}
          onClick={openDetail}
          onKeyDown={handleKeyDown}
          className="glow-card group cursor-pointer outline-none ring-primary focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--bg-color)]"
       >
          <div className="aspect-square overflow-hidden">
-            <motion.img
-               layoutId={characterImageLayoutId(character.id)}
+            <img
                src={character.image}
                alt={character.name}
                loading="lazy"

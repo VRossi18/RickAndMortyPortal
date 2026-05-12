@@ -2,11 +2,9 @@ import { isAxiosError } from 'axios';
 import { motion } from 'framer-motion';
 import { useEffect, useMemo, useState } from 'react';
 import { Link, useLocation, useParams } from 'react-router-dom';
-import { characterImageLayoutId } from '../lib/characterLayout';
 import { CharacterService } from '../services/characters';
 import type { Character } from '../types/api';
 import type { CharacterLocationState } from '../types/navigation';
-import { ThemeToggle } from '../components/ThemeToggle';
 
 function formatDate(iso: string) {
    try {
@@ -78,7 +76,8 @@ export function CharacterDetailPage() {
          className="relative min-h-screen overflow-x-hidden bg-[var(--bg-color)] text-[var(--text-color)]"
          initial={{ opacity: 0 }}
          animate={{ opacity: 1 }}
-         exit={{ opacity: 0, transition: { duration: 0.25 } }}
+         exit={{ opacity: 0 }}
+         transition={{ duration: 0.25, ease: 'easeOut' }}
       >
          {portal ? (
             <motion.div
@@ -94,11 +93,9 @@ export function CharacterDetailPage() {
          ) : null}
 
          <div className="relative z-10">
-            <ThemeToggle />
-
             <div className="mx-auto max-w-5xl px-4 pb-6 pt-10 md:pt-14">
                <Link
-                  to="/"
+                  to="/characters"
                   className="inline-flex w-fit items-center gap-2 rounded-md border border-primary/40 px-3 py-2 text-sm font-semibold text-primary transition hover:border-primary hover:bg-primary/10"
                >
                   Voltar ao portal
@@ -116,8 +113,7 @@ export function CharacterDetailPage() {
                ) : character ? (
                   <div className="flex flex-col gap-10 md:flex-row md:items-start">
                      <div className="mx-auto w-full max-w-sm shrink-0 overflow-hidden rounded-2xl border border-primary/25 bg-card shadow-lg shadow-primary/10 md:mx-0">
-                        <motion.img
-                           layoutId={characterImageLayoutId(character.id)}
+                        <img
                            src={character.image}
                            alt={character.name}
                            className="aspect-square w-full object-cover"
@@ -126,7 +122,9 @@ export function CharacterDetailPage() {
 
                      <div className="min-w-0 flex-1 space-y-6">
                         <div>
-                           <h1 className="text-3xl font-black tracking-tight md:text-4xl">{character.name}</h1>
+                           <h1 className="text-3xl font-black tracking-tight md:text-4xl">
+                              {character.name}
+                           </h1>
                            <div className="mt-3 flex flex-wrap items-center gap-2 text-muted-foreground">
                               <span
                                  className="status-dot"
@@ -151,19 +149,25 @@ export function CharacterDetailPage() {
                               <dt className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
                                  Gênero
                               </dt>
-                              <dd className="mt-1 font-medium text-foreground">{character.gender}</dd>
+                              <dd className="mt-1 font-medium text-foreground">
+                                 {character.gender}
+                              </dd>
                            </div>
                            <div className="rounded-xl border border-border/60 bg-card/40 p-4 sm:col-span-2">
                               <dt className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
                                  Origem
                               </dt>
-                              <dd className="mt-1 font-medium text-foreground">{character.origin.name}</dd>
+                              <dd className="mt-1 font-medium text-foreground">
+                                 {character.origin.name}
+                              </dd>
                            </div>
                            <div className="rounded-xl border border-border/60 bg-card/40 p-4 sm:col-span-2">
                               <dt className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
                                  Local atual
                               </dt>
-                              <dd className="mt-1 font-medium text-foreground">{character.location.name}</dd>
+                              <dd className="mt-1 font-medium text-foreground">
+                                 {character.location.name}
+                              </dd>
                            </div>
                            <div className="rounded-xl border border-border/60 bg-card/40 p-4 sm:col-span-2">
                               <dt className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
@@ -177,7 +181,9 @@ export function CharacterDetailPage() {
                               <dt className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
                                  Criado em
                               </dt>
-                              <dd className="mt-1 font-medium text-foreground">{formatDate(character.created)}</dd>
+                              <dd className="mt-1 font-medium text-foreground">
+                                 {formatDate(character.created)}
+                              </dd>
                            </div>
                         </dl>
                      </div>

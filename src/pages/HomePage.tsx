@@ -2,7 +2,6 @@ import { motion } from 'framer-motion';
 import { useEffect, useState } from 'react';
 import { flushSync } from 'react-dom';
 import { CharacterCard } from '../components/CharacterCard';
-import { ThemeToggle } from '../components/ThemeToggle';
 import { CharacterService } from '../services/characters';
 import type { Character, Info } from '../types/api';
 
@@ -73,16 +72,15 @@ export function HomePage() {
          className="min-h-screen bg-[var(--bg-color)] transition-colors duration-300"
          initial={{ opacity: 0 }}
          animate={{ opacity: 1 }}
-         exit={{ opacity: 0, transition: { duration: 0.28 } }}
+         exit={{ opacity: 0 }}
+         transition={{ duration: 0.28, ease: 'easeOut' }}
       >
-         <ThemeToggle />
-
-         <header className="pt-16 pb-12 px-4 text-center">
+         <header className="pt-8 pb-12 px-4 text-center md:pt-10">
             <h1 className="text-5xl md:text-6xl font-black tracking-tighter text-[var(--text-color)]">
                RICK AND <span className="text-primary">MORTY</span>
             </h1>
             <p className="mt-4 text-slate-500 dark:text-slate-400 font-medium tracking-wide">
-               EXPLORANDO O MULTIVERSO COM REACT & TAILWIND
+               EXPLORANDO O MULTIVERSO DE RICK AND MORTY
             </p>
             <div className="mt-6 w-24 h-1.5 bg-primary mx-auto rounded-full opacity-20"></div>
          </header>

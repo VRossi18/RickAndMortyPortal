@@ -41,7 +41,7 @@ jobs:
               pnpm lint
               pnpm test
    build-and-audit:
-      name: build-and-audit
+      name: Build and audit
       needs: lint-and-test
       runs-on: ubuntu-latest
       steps:

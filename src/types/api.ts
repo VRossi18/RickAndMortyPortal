@@ -13,7 +13,7 @@ export interface Character {
    origin: ResourceBase;
    location: ResourceBase;
    image: string;
-   episode: string[]; // Lista de URLs dos episódios
+   episode: string[];
    url: string;
    created: string;
 }
