@@ -1,12 +1,21 @@
+import { motion } from 'framer-motion';
 import { useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { characterImageLayoutId } from '../lib/characterLayout';
 import type { Character } from '../types/api';
+import type { CharacterLocationState } from '../types/navigation';
+
+export type CardInteraction = 'normal' | 'source' | 'dimmed';
 
 interface Props {
    character: Character;
+   interaction?: CardInteraction;
+   onBeforeNavigate?: (id: number) => void;
 }
 
-export function CharacterCard({ character }: Props) {
+export function CharacterCard({ character, interaction = 'normal', onBeforeNavigate }: Props) {
    const ref = useRef<HTMLDivElement>(null);
+   const navigate = useNavigate();
 
    const handleMove = (e: React.MouseEvent<HTMLDivElement>) => {
       const el = ref.current;
@@ -16,6 +25,24 @@ export function CharacterCard({ character }: Props) {
       el.style.setProperty('--my', `${e.clientY - r.top}px`);
    };
 
+   const openDetail = () => {
+      const el = ref.current;
+      if (!el) return;
+      const r = el.getBoundingClientRect();
+      const state: CharacterLocationState = {
+         portal: { x: r.left + r.width / 2, y: r.top + r.height / 2 },
+      };
+      onBeforeNavigate?.(character.id);
+      navigate(`/character/${character.id}`, { state });
+   };
+
+   const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+         e.preventDefault();
+         openDetail();
+      }
+   };
+
    const statusColor =
       character.status === 'Alive'
          ? 'var(--portal-green)'
@@ -23,10 +50,30 @@ export function CharacterCard({ character }: Props) {
            ? 'var(--destructive)'
            : 'var(--muted-foreground)';
 
+   const interactionMotion =
+      interaction === 'dimmed'
+         ? { opacity: 0.32, scale: 0.92, filter: 'blur(2px)' as const }
+         : interaction === 'source'
+           ? { opacity: 1, scale: 1.04, filter: 'blur(0px)' as const, zIndex: 2 }
+           : { opacity: 1, scale: 1, filter: 'blur(0px)' as const, zIndex: 0 };
+
    return (
-      <div ref={ref} onMouseMove={handleMove} className="glow-card group">
+      <motion.div
+         ref={ref}
+         layout
+         role="link"
+         tabIndex={0}
+         aria-label={`Ver detalhes de ${character.name}`}
+         animate={interactionMotion}
+         transition={{ type: 'spring', stiffness: 420, damping: 34 }}
+         onMouseMove={handleMove}
+         onClick={openDetail}
+         onKeyDown={handleKeyDown}
+         className="glow-card group cursor-pointer outline-none ring-primary focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--bg-color)]"
+      >
          <div className="aspect-square overflow-hidden">
-            <img
+            <motion.img
+               layoutId={characterImageLayoutId(character.id)}
                src={character.image}
                alt={character.name}
                loading="lazy"
@@ -55,6 +102,6 @@ export function CharacterCard({ character }: Props) {
                </p>
             </div>
          </div>
-      </div>
+      </motion.div>
    );
 }

@@ -2,20 +2,23 @@
 
 [![Pipeline](https://github.com/VRossi18/rick-morty-portal/actions/workflows/pipeline.yml/badge.svg)](https://github.com/VRossi18/rick-morty-portal/actions/workflows/pipeline.yml)
 
-A small **React** app that browses characters from the [Rick and Morty API](https://rickandmortyapi.com/). This repository doubles as a **hands-on sandbox for learning GitHub Actions**: workflows, jobs, caching-friendly installs, and keeping `main` green with automated checks.
+A small **React** app that browses characters from the [Rick and Morty API](https://rickandmortyapi.com/), with a **character detail** view, client-side routing, and a portal-style transition between the grid and the detail screen. This repository doubles as a **hands-on sandbox for learning GitHub Actions**: workflows, jobs, GitHub Pages deploy, and keeping `main` green with automated checks.
 
 ---
 
 ## Why this project exists
 
-The **primary goal** is to get comfortable with **GitHub Actions** in a real (but small) codebase: defining when workflows run, wiring Node and pnpm, splitting work across jobs, and failing fast when lint or tests break. The UI is the fun part; the pipeline is the lesson.
+The **primary goal** is to get comfortable with **GitHub Actions** in a real (but small) codebase: defining when workflows run, wiring Node and pnpm, splitting work across jobs, publishing static assets to **GitHub Pages**, and failing fast when lint or tests break. The UI is the fun part; the pipeline is the lesson.
 
 ### What the pipeline does
 
 | Job | When | Steps |
 | --- | --- | --- |
 | **Lint and test** | Every push and PR to `main` | `pnpm install` → `pnpm lint` → `pnpm test` |
-| **Build and audit** | After lint and test succeed | `pnpm install` → `pnpm run build` → `pnpm audit` |
+| **Build and audit** | After lint and test succeed | `pnpm install` → `pnpm run build` → `pnpm audit` → (on `main` push only) upload `dist` as a Pages artifact |
+| **Deploy GitHub Pages** | After build, only on **`push` to `main`** | `actions/deploy-pages` publishes the uploaded artifact |
+
+The production build runs [`scripts/copy-404.mjs`](scripts/copy-404.mjs) after Vite so **`dist/404.html`** mirrors `index.html`. That helps the hosted SPA when users refresh or open a deep link such as `/rick-morty-portal/character/2` on GitHub Pages.
 
 ```mermaid
 flowchart LR
@@ -33,14 +36,19 @@ flowchart LR
       install2[pnpm install]
       build[pnpm run build]
       audit[pnpm audit]
-      install2 --> build --> audit
+      upload[upload-pages-artifact]
+      install2 --> build --> audit --> upload
+   end
+   subgraph job3 [deploy-pages]
+      deploy[deploy-pages]
    end
    push --> job1
    pr --> job1
    job1 -->|needs success| job2
+   job2 -->|main push only| job3
 ```
 
-Workflow file: [`.github/workflows/pipeline.yml`](.github/workflows/pipeline.yml).
+Workflow file: [`.github/workflows/pipeline.yml`](.github/workflows/pipeline.yml). In the repo **Settings → Pages**, the source should be **GitHub Actions** so the deploy job can run.
 
 ---
 
@@ -48,8 +56,9 @@ Workflow file: [`.github/workflows/pipeline.yml`](.github/workflows/pipeline.yml
 
 - **Runtime / tooling:** Node.js **24+**, **pnpm 10** (see `engines` in [`package.json`](package.json))
 - **UI:** React 19, TypeScript, Vite 8
+- **Routing / motion:** React Router 7, Framer Motion (shared `layoutId` on the character image, `AnimatePresence` between routes)
 - **Styling:** Tailwind CSS 4, FlyonUI, `clsx` / `tailwind-merge`
-- **Data:** Axios
+- **Data:** Axios (`GET /character` for lists, `GET /character/:id` for details — see [`CharacterService`](src/services/characters.ts))
 - **Quality:** ESLint (flat config), Vitest, Testing Library, jsdom
 
 ---
@@ -57,17 +66,20 @@ Workflow file: [`.github/workflows/pipeline.yml`](.github/workflows/pipeline.yml
 ## Current features
 
 - Paginated grid of characters from the public API
-- Loading and error states
+- **Click a card** (`cursor: pointer`) to open **`/character/:id`**, with a short “portal” feel: other cards dim / ease aside, the image **animates into** the detail layout, and an optional radial overlay uses the click origin when navigation passes `location.state`
+- **Character detail** page: full fields from the API (status, species, type, gender, origin, location, episode count, created), loading and error handling (including 404)
+- **Back** link to the home grid
+- Loading and error states on the list
 - Light / dark theme toggle
 - Responsive layout
+- **`import.meta.env.BASE_URL`** as the router `basename` in production so asset paths and routes stay correct under a GitHub Pages project URL (see [`vite.config.ts`](vite.config.ts))
 
 ---
 
 ## Roadmap
 
 1. **About me** — dedicated page introducing the author / project story  
-2. **Character details** — per-character view (deeper than the card summary)  
-3. **Search** — filter or find characters via a text input  
+2. **Search** — filter or find characters via a text input (list endpoint already supports filters in [`CharacterService.getCharacters`](src/services/characters.ts))
 
 ---
 
@@ -82,17 +94,17 @@ pnpm install
 pnpm dev
 ```
 
-Open the URL Vite prints (usually `http://localhost:5173`).
+Open the URL Vite prints (usually `http://localhost:5173`). In dev, the app lives at the root path; in production the Vite `base` is set for the GitHub Pages subpath, and the router uses the same value.
 
 ### Scripts
 
 | Command | Description |
 | --- | --- |
 | `pnpm dev` | Start dev server with HMR |
-| `pnpm build` | Typecheck and production build |
+| `pnpm build` | Typecheck, Vite production build, then copy `dist/index.html` → `dist/404.html` for SPA hosting |
 | `pnpm preview` | Preview the production build locally |
 | `pnpm lint` | Run ESLint on the project |
 | `pnpm test` | Run Vitest once (CI mode) |
 | `pnpm test:watch` | Run Vitest in watch mode |
 
-These mirror what runs in GitHub Actions so local results should match CI.
+These mirror what runs in GitHub Actions so local results should match CI (the `404.html` step runs inside `pnpm build`).
