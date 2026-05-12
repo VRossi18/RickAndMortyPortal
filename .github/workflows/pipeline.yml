@@ -11,6 +11,15 @@ on:
    pull_request:
       branches: [main]
 
+concurrency:
+   group: ${{ github.workflow }}-${{ github.ref }}
+   cancel-in-progress: true
+
+permissions:
+   contents: read
+   pages: write
+   id-token: write
+
 jobs:
    lint-and-test:
       name: Lint and test
@@ -51,3 +60,21 @@ jobs:
               pnpm install
               pnpm run build
               pnpm audit
+         - name: Package dist for GitHub Pages
+           if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+           uses: actions/upload-pages-artifact@v5
+           with:
+              path: dist
+
+   deploy-pages:
+      name: Deploy GitHub Pages
+      needs: build-and-audit
+      runs-on: ubuntu-latest
+      if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+      environment:
+         name: github-pages
+         url: ${{ steps.deployment.outputs.page_url }}
+      steps:
+         - name: Publicar site (artifact -> Pages)
+           id: deployment
+           uses: actions/deploy-pages@v5
