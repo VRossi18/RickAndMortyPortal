@@ -87,3 +87,64 @@ jobs:
          - name: Publicar site (artifact -> Pages)
            id: deployment
            uses: actions/deploy-pages@v5
+
+   tag-deploy:
+      name: Tag release (patch)
+      if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+      needs: deploy-pages
+      runs-on: ubuntu-latest
+      permissions:
+         contents: write
+      steps:
+         - name: checkout
+           uses: actions/checkout@v5
+           with:
+              fetch-depth: 0
+              fetch-tags: true
+         - name: Configure Git for tags
+           run: |
+              git config user.name "github-actions[bot]"
+              git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+         - name: Bump patch tag and push
+           run: |
+              set -euo pipefail
+              PREFIX_FILE=".github/version-prefix"
+              test -f "$PREFIX_FILE" || { echo "Missing ${PREFIX_FILE}"; exit 1; }
+              PREFIX="$(tr -d ' \t\r\n' < "$PREFIX_FILE" | sed 's/^v//')"
+              if ! echo "$PREFIX" | grep -Eq '^[0-9]+\.[0-9]+$'; then
+                echo "Invalid version prefix in ${PREFIX_FILE} (use MAJOR.MINOR, e.g. 1.0): got '${PREFIX}'"
+                exit 1
+              fi
+
+              git fetch --tags origin
+
+              latest="$(git tag -l "v${PREFIX}.*" --sort=-v:refname | head -n1 || true)"
+              if [ -z "$latest" ]; then
+                NEWTAG="v${PREFIX}.1"
+                echo "No tags for v${PREFIX}.*; creating ${NEWTAG}"
+              else
+                base="${latest#v}"
+                patch="${base##*.}"
+                major_minor="${base%.*}"
+                if [ "$major_minor" != "$PREFIX" ]; then
+                  echo "Latest tag ${latest} does not match prefix ${PREFIX}; refusing to guess"
+                  exit 1
+                fi
+                newpatch=$((10#${patch} + 1))
+                NEWTAG="v${major_minor}.${newpatch}"
+                echo "Latest was ${latest}; creating ${NEWTAG}"
+              fi
+
+              if git rev-parse "${NEWTAG}" >/dev/null 2>&1; then
+                echo "Tag ${NEWTAG} already exists locally; skipping"
+                exit 0
+              fi
+
+              if [ -n "$(git ls-remote --tags origin "refs/tags/${NEWTAG}" 2>/dev/null || true)" ]; then
+                echo "Tag ${NEWTAG} already exists on remote; skipping"
+                exit 0
+              fi
+
+              git tag "${NEWTAG}"
+              git push origin "refs/tags/${NEWTAG}"
+              echo "Pushed tag ${NEWTAG}"
