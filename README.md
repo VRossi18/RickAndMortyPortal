@@ -2,13 +2,15 @@
 
 [![Pipeline](https://github.com/VRossi18/rick-morty-portal/actions/workflows/pipeline.yml/badge.svg)](https://github.com/VRossi18/rick-morty-portal/actions/workflows/pipeline.yml)
 
-A small **React** app that browses characters from the [Rick and Morty API](https://rickandmortyapi.com/), with a **character detail** view, client-side routing, and a portal-style transition between the grid and the detail screen. This repository doubles as a **hands-on sandbox for learning GitHub Actions**: workflows, jobs, GitHub Pages deploy, and keeping `main` green with automated checks.
+A small **React** app that browses characters from the [Rick and Morty API](https://rickandmortyapi.com/), with a **character detail** view, client-side routing, and a portal-style transition between the grid and the detail screen. This repository doubles as a **hands-on sandbox for learning GitHub Actions**: workflows, jobs, GitHub Pages deploy, and keeping `main` green with automated checks. It is also a place to **go deeper with the stack** (React, TypeScript, Vite, routing, i18n, testing) and to **experiment with LLM-backed gameplay**—for example a GM or rules assistant grounded in the rules you encode in the app.
 
 ---
 
 ## Why this project exists
 
 The **primary goal** is to get comfortable with **GitHub Actions** in a real (but small) codebase: defining when workflows run, wiring Node and pnpm, splitting work across jobs, publishing static assets to **GitHub Pages**, and failing fast when lint or tests break. The UI is the fun part; the pipeline is the lesson.
+
+Beyond CI/CD, the project is meant to grow a **playable Rick and Morty–inspired RPG loop** where a **large language model** can help run a session (narration, rolls, or structured prompts tied to the character sheet). The current **`/rpg`** route is the first slice: point-buy creation, racial modifiers, drawbacks, and live totals—future work can add session UI, sheet export (e.g. JSON), or an API/MCP surface so an LLM can read state and respond consistently within GitHub Pages constraints where possible.
 
 ### What the pipeline does
 
@@ -61,6 +63,7 @@ Workflow file: [`.github/workflows/pipeline.yml`](.github/workflows/pipeline.yml
 - **Data:** Axios (`GET /character` for lists, `GET /character/:id` for details — see [`CharacterService`](src/services/characters.ts))
 - **i18n:** `i18next` + `react-i18next`, copy in [`src/locales/pt/common.json`](src/locales/pt/common.json) / [`src/locales/en/common.json`](src/locales/en/common.json), bootstrap in [`src/i18n.ts`](src/i18n.ts)
 - **Quality:** ESLint (flat config), Vitest, Testing Library, jsdom
+- **Learning / experiments:** More real-world practice with the stack above; upcoming **LLM integration** (hosted APIs, structured prompts, or MCP) to support a **playable** tabletop-style loop alongside the UI
 
 ---
 
@@ -76,14 +79,14 @@ Workflow file: [`.github/workflows/pipeline.yml`](.github/workflows/pipeline.yml
 - **Internationalization (PT / EN)** — UI strings live in locale JSON; language is stored in **`localStorage`** (`portal.locale`, default `pt`); **`document.documentElement.lang`** stays in sync; **navbar flag switcher** ([`LanguageSwitcher`](src/components/LanguageSwitcher.tsx))
 - Light / dark theme toggle
 - Responsive layout
-- **Rick and Morty RPG (v1)** — point-buy **character creator** at **`/rpg`**: six races with racial modifiers, 27-point pool, scores 8–15 before racial, live totals; see [`CharacterSheetContainer`](src/components/rpg/CharacterSheetContainer.tsx) and [`useCharacterCreation`](src/components/rpg/useCharacterCreation.ts)
+- **Rick and Morty RPG (v1)** — point-buy **character creator** at **`/rpg`**: multiple races with racial modifiers and drawbacks, 27-point pool, scores 8–15 before racial, live totals; foundation for future LLM-driven playtests and GM tooling. See [`CharacterSheetContainer`](src/components/rpg/CharacterSheetContainer.tsx) and [`useCharacterCreation`](src/components/rpg/useCharacterCreation.ts)
 - **`import.meta.env.BASE_URL`** as the router `basename` in production so asset paths and routes stay correct under a GitHub Pages project URL (see [`vite.config.ts`](vite.config.ts))
 
 ---
 
 ## Roadmap
 
-1. **Rick and Morty tabletop RPG** — extend **`/rpg`** (session tools, episode links, or printed-sheet export) beyond the current point-buy creator
+1. **LLM-playable tabletop RPG** — evolve **`/rpg`** into a session you can run with an LLM (clear prompts, sheet JSON export, optional small backend or MCP) while keeping the static app and GitHub Pages story in mind; add session tools, episode links, or printed-sheet export as needed
 
 ---
 
