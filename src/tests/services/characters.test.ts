@@ -1,9 +1,9 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import type { ApiResponse, Character } from '../types/api';
-import api from './api';
-import { CharacterService } from './characters';
+import type { ApiResponse, Character } from '../../types/api';
+import api from '../../services/api';
+import { CharacterService } from '../../services/characters';
 
-vi.mock('./api', () => ({
+vi.mock('../../services/api', () => ({
    default: {
       get: vi.fn(),
    },

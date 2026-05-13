@@ -50,7 +50,8 @@ export function CharacterSheetContainer() {
       selectedRaceId,
       selectedRace,
       scores,
-      racialBonus,
+      sheetRacialBonus,
+      sheetDrawback,
       spent,
       remaining,
       totals,
@@ -64,8 +65,14 @@ export function CharacterSheetContainer() {
 
    const previewName = t(`rpg.races.${selectedRace.id}.name` as 'rpg.title');
    const previewSkill = t(`rpg.races.${selectedRace.id}.skill` as 'rpg.title');
+   const previewSecondarySkill = t(
+      `rpg.races.${selectedRace.id}.secondarySkill` as 'rpg.title',
+   );
    const previewAlt = t(`rpg.races.${selectedRace.id}.imageAlt` as 'rpg.title');
    const previewVisual = t(`rpg.races.${selectedRace.id}.visualDescription` as 'rpg.title');
+   const previewDrawback = t(
+      `rpg.races.${selectedRace.id}.drawbackDescription` as 'rpg.title',
+   );
 
    return (
       <div className="mx-auto max-w-5xl space-y-10 px-4 py-8 md:py-12">
@@ -157,8 +164,20 @@ export function CharacterSheetContainer() {
                      </span>
                      {previewSkill}
                   </p>
+                  <p className="mt-2 text-sm text-muted-foreground">
+                     <span className="font-semibold text-foreground/90">
+                        {t('rpg.raceSecondarySkill')}:{' '}
+                     </span>
+                     {previewSecondarySkill}
+                  </p>
                   <p className="mt-2 text-xs leading-relaxed text-muted-foreground">
                      {previewVisual}
+                  </p>
+                  <p className="mt-2 text-xs leading-relaxed text-amber-800/95 dark:text-amber-200/90">
+                     <span className="font-semibold text-foreground/85">
+                        {t('rpg.raceDrawback')}:{' '}
+                     </span>
+                     {previewDrawback}
                   </p>
                </div>
             </div>
@@ -211,7 +230,8 @@ export function CharacterSheetContainer() {
             </h2>
             <ul className="space-y-4">
                {ABILITY_IDS.map((id) => {
-                  const bonus = racialBonus[id];
+                  const raceBonus = sheetRacialBonus[id];
+                  const drawback = sheetDrawback[id];
                   const total = totals[id];
                   const invested = scores[id] - BASE_SCORE;
                   const warn = highTotalFlags[id];
@@ -224,7 +244,7 @@ export function CharacterSheetContainer() {
                            <p className="text-sm font-bold text-foreground">
                               {t(`rpg.abilities.${id}` as 'rpg.title')}
                            </p>
-                           <dl className="mt-3 grid grid-cols-2 gap-x-4 gap-y-2 text-xs sm:grid-cols-4">
+                           <dl className="mt-3 grid grid-cols-2 gap-x-4 gap-y-2 text-xs sm:grid-cols-3 md:grid-cols-5">
                               <div>
                                  <dt className="text-muted-foreground">{t('rpg.sheetBase')}</dt>
                                  <dd className="font-mono text-sm font-semibold">{BASE_SCORE}</dd>
@@ -240,10 +260,21 @@ export function CharacterSheetContainer() {
                                  <dd
                                     className={clsx(
                                        'font-mono text-sm font-semibold',
-                                       bonus > 0 && 'text-emerald-600 dark:text-emerald-400',
+                                       raceBonus > 0 && 'text-emerald-600 dark:text-emerald-400',
                                     )}
                                  >
-                                    {formatBonus(bonus)}
+                                    {formatBonus(raceBonus)}
+                                 </dd>
+                              </div>
+                              <div>
+                                 <dt className="text-muted-foreground">{t('rpg.sheetDrawback')}</dt>
+                                 <dd
+                                    className={clsx(
+                                       'font-mono text-sm font-semibold',
+                                       drawback < 0 && 'text-rose-600 dark:text-rose-400',
+                                    )}
+                                 >
+                                    {formatBonus(drawback)}
                                  </dd>
                               </div>
                               <div>

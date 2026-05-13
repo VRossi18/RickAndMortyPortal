@@ -1,12 +1,12 @@
 import { act, fireEvent, render, screen, waitFor, within } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import i18n from '../i18n';
-import type { ApiResponse, Character } from '../types/api';
-import { CharacterService } from '../services/characters';
-import { HomePage } from './HomePage';
+import i18n from '../../i18n';
+import type { ApiResponse, Character } from '../../types/api';
+import { CharacterService } from '../../services/characters';
+import { HomePage } from '../../pages/HomePage';
 
-vi.mock('../services/characters', () => ({
+vi.mock('../../services/characters', () => ({
    CharacterService: {
       getCharacters: vi.fn(),
    },

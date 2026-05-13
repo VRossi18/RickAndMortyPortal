@@ -1,6 +1,6 @@
 import { renderHook, waitFor } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { useIsMobile } from './useMobile';
+import { useIsMobile } from '../../hooks/useMobile';
 
 function stubViewport(width: number) {
    Object.defineProperty(window, 'innerWidth', {

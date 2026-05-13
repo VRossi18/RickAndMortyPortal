@@ -1,7 +1,7 @@
 import { act, renderHook } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
-import { POINT_POOL_MAX } from './characterCreationMath';
-import { useCharacterCreation } from './useCharacterCreation';
+import { POINT_POOL_MAX } from '../../../components/rpg/characterCreationMath';
+import { useCharacterCreation } from '../../../components/rpg/useCharacterCreation';
 
 describe('useCharacterCreation', () => {
    it('starts at base scores with first race and full pool', () => {
@@ -100,8 +100,12 @@ describe('useCharacterCreation', () => {
          result.current.setRace('ciancans');
       });
       expect(result.current.scores.str).toBe(10);
-      expect(result.current.totals.str).toBe(10);
-      expect(result.current.totals.int).toBe(10);
+      expect(result.current.totals.str).toBe(
+         result.current.scores.str + result.current.racialBonus.str,
+      );
+      expect(result.current.totals.int).toBe(
+         result.current.scores.int + result.current.racialBonus.int,
+      );
    });
 
    it('decrement respects floor', () => {

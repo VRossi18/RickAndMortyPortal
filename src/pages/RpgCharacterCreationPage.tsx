@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import { CharacterSheetContainer } from '../features/rpg/CharacterSheetContainer';
+import { CharacterSheetContainer } from '../components/rpg/CharacterSheetContainer';
 
 export function RpgCharacterCreationPage() {
    return (

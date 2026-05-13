@@ -7,8 +7,9 @@ import {
    defaultScores,
    remainingPoints,
    totalExceedsWarning,
-} from './characterCreationMath';
-import { racialBonusMap, getRaceById } from './races';
+} from '../../../components/rpg/characterCreationMath';
+import { drawbackModifierMap, getRaceById, mergeAbilityDeltas, racialBonusMap } from '../../../components/rpg/races';
+import { ABILITY_IDS } from '../../../components/rpg/types';
 
 describe('characterCreationMath', () => {
    it('defaultScores spends zero from pool', () => {
@@ -29,12 +30,20 @@ describe('characterCreationMath', () => {
       expect(computeTotals(scores, bonus).str).toBe(14);
    });
 
-   it('parasites add +1 to every ability', () => {
+   it('computeTotals supports negative per-ability deltas (drawbacks)', () => {
       const scores = defaultScores();
-      const bonus = racialBonusMap(getRaceById('parasites'));
+      const bonus = { str: 0, dex: 0, con: 0, int: -1, cha: 0 };
+      expect(computeTotals(scores, bonus).int).toBe(BASE_SCORE - 1);
+   });
+
+   it('computeTotals uses merged racial + drawback like the character sheet', () => {
+      const scores = defaultScores();
+      const race = getRaceById('parasites');
+      const bonus = mergeAbilityDeltas(racialBonusMap(race), drawbackModifierMap(race));
       const t = computeTotals(scores, bonus);
-      expect(t.str).toBe(BASE_SCORE + 1);
-      expect(t.int).toBe(BASE_SCORE + 1);
+      for (const id of ABILITY_IDS) {
+         expect(t[id]).toBe(BASE_SCORE + bonus[id]);
+      }
    });
 
    it('totalExceedsWarning flags totals above threshold', () => {

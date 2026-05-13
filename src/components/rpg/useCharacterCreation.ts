@@ -9,13 +9,14 @@ import {
    MIN_SCORE_BEFORE_RACE,
    POINT_POOL_MAX,
 } from './characterCreationMath';
-import { defaultRaceId, getRaceById, racialBonusMap } from './races';
+import { defaultRaceId, drawbackModifierMap, getRaceById, mergeAbilityDeltas, racialBonusMap } from './races';
 import type { AbilityId, AbilityScores, RaceId } from './types';
 
 /**
  * Point-buy + race: `scores` are capped at 15 before race (`incrementAbility` /
- * `decrementAbility`); `totals` add the active race’s modifiers on top. Example:
- * Ciancãs grants +2 INT — if `scores.int` is 15, `totals.int` is 17.
+ * `decrementAbility`); `totals` add per-ability deltas on top: racial bonuses,
+ * human flexible +1s, and optional `drawbackModifiers` (negative). Example:
+ * INT 15 on sheet, +2 racial, -1 drawback → `totals.int` 16.
  */
 export function useCharacterCreation() {
    const [selectedRaceId, setSelectedRaceId] = useState<RaceId>(() => defaultRaceId());
@@ -26,18 +27,26 @@ export function useCharacterCreation() {
    ]);
 
    const selectedRace = useMemo(() => getRaceById(selectedRaceId), [selectedRaceId]);
-   const racialBonus = useMemo(() => {
-      const base = racialBonusMap(selectedRace);
-      if (selectedRaceId !== 'humans') {
-         return base;
+
+   const sheetRacialBonus = useMemo(() => {
+      let withHuman = racialBonusMap(selectedRace);
+      if (selectedRaceId === 'humans') {
+         const [a, b] = humanBonusChoices;
+         withHuman = {
+            ...withHuman,
+            [a]: withHuman[a] + 1,
+            [b]: withHuman[b] + 1,
+         };
       }
-      const [a, b] = humanBonusChoices;
-      return {
-         ...base,
-         [a]: base[a] + 1,
-         [b]: base[b] + 1,
-      };
+      return withHuman;
    }, [selectedRace, selectedRaceId, humanBonusChoices]);
+
+   const sheetDrawback = useMemo(() => drawbackModifierMap(selectedRace), [selectedRace]);
+
+   const racialBonus = useMemo(
+      () => mergeAbilityDeltas(sheetRacialBonus, sheetDrawback),
+      [sheetRacialBonus, sheetDrawback],
+   );
    const spent = useMemo(() => computeSpent(scores), [scores]);
    const remaining = useMemo(() => remainingPoints(scores), [scores]);
    const totals = useMemo(() => computeTotals(scores, racialBonus), [scores, racialBonus]);
@@ -86,6 +95,8 @@ export function useCharacterCreation() {
       selectedRace,
       scores,
       racialBonus,
+      sheetRacialBonus,
+      sheetDrawback,
       spent,
       remaining,
       totals,

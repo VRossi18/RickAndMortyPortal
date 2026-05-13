@@ -84,7 +84,7 @@
    },
    "rpg": {
       "title": "Character creation",
-      "subtitle": "Spend 27 points (1:1 cost). Score before racial modifiers: 8–15. Total = sheet score + racial bonus.",
+      "subtitle": "Spend 27 points (1:1 cost). Score before racial modifiers: 8–15. Total = sheet score + racial bonus + drawback.",
       "poolSummary": "{{spent}} / 27 points spent — {{remaining}} left",
       "raceHeading": "Race",
       "selectedRacePreview": "Selected race",
@@ -92,6 +92,7 @@
       "sheetBase": "Base",
       "sheetInvested": "Above 8",
       "sheetRacial": "Racial",
+      "sheetDrawback": "Drawback",
       "sheetTotal": "Total",
       "suggestedSkill": "Skill",
       "highTotalHint": "Total over 17 (visual highlight only)",
@@ -101,6 +102,8 @@
       "humanBonusHeading": "Human racial bonuses (+1 each)",
       "humanBonusSlot1": "First +1 attribute",
       "humanBonusSlot2": "Second +1 attribute",
+      "raceSecondarySkill": "Second racial skill",
+      "raceDrawback": "Drawback",
       "abilities": {
          "str": "Strength",
          "dex": "Dexterity",
@@ -113,55 +116,73 @@
             "name": "Ciancans",
             "skill": "Technical Hive Mind (Intelligence)",
             "imageAlt": "Portrait of Prince Nebulon (Zigerion) from the show, used as visual reference for Ciancans.",
-            "visualDescription": "Scam-prone hive-minded aliens with green skin, red eyes, and fin-like frills—tech hustle energy."
+            "visualDescription": "Scam-prone hive-minded aliens with green skin, red eyes, and fin-like frills—tech hustle energy.",
+            "secondarySkill": "—",
+            "drawbackDescription": "—"
          },
          "cronenbergs": {
             "name": "Cronenbergs",
             "skill": "Mutant Resilience (Strength)",
             "imageAlt": "Portrait of Cronenberg Rick from the show, used as visual reference for Cronenbergs.",
-            "visualDescription": "Mutated bodies and exposed organic tissue in red, fleshy tones."
+            "visualDescription": "Mutated bodies and exposed organic tissue in red, fleshy tones.",
+            "secondarySkill": "—",
+            "drawbackDescription": "—"
          },
          "birdPeople": {
             "name": "Bird-Person",
             "skill": "Avian Agility (Dexterity)",
             "imageAlt": "Portrait of Birdperson from the show, used as visual reference for Bird-Person.",
-            "visualDescription": "Avian humanoids with feathers, beaks, and a nimble silhouette."
+            "visualDescription": "Avian humanoids with feathers, beaks, and a nimble silhouette.",
+            "secondarySkill": "—",
+            "drawbackDescription": "—"
          },
          "chuds": {
             "name": "Chuds",
             "skill": "Subterranean Survival (Constitution)",
             "imageAlt": "Portrait of CHUD King from the show, used as visual reference for Chuds.",
-            "visualDescription": "Subterranean equine humanoids—tough and tied to the underworld."
+            "visualDescription": "Subterranean equine humanoids—tough and tied to the underworld.",
+            "secondarySkill": "—",
+            "drawbackDescription": "—"
          },
          "cromulons": {
             "name": "Cromulons",
             "skill": "Show Me What You Got (Performance / Charisma)",
             "imageAlt": "Portrait of Armagheadon (Cromulon) from the show, used as visual reference for Cromulons.",
-            "visualDescription": "Giant planet heads with a strong, performative presence."
+            "visualDescription": "Giant planet heads with a strong, performative presence.",
+            "secondarySkill": "—",
+            "drawbackDescription": "—"
          },
          "parasites": {
             "name": "Parasites",
             "skill": "False Memory (Deception) — +1 to every ability",
             "imageAlt": "Portrait of Pencilvester (parasite) from the show, used as visual reference for Parasites.",
-            "visualDescription": "Shapes that pose as friends until the real threat is revealed."
+            "visualDescription": "Shapes that pose as friends until the real threat is revealed.",
+            "secondarySkill": "—",
+            "drawbackDescription": "—"
          },
          "gearPeople": {
             "name": "Gear People",
             "skill": "Gear maintenance: bonus when repairing tech and knowledge of the Gear Wars (Intelligence).",
             "imageAlt": "Portrait of Anchor Gear (Gear-Person from Gear World) from the show, visual reference for Gear People.",
-            "visualDescription": "Mechanical beings with exposed gears and bronze / metallic tones."
+            "visualDescription": "Mechanical beings with exposed gears and bronze / metallic tones.",
+            "secondarySkill": "—",
+            "drawbackDescription": "—"
          },
          "gromflomites": {
             "name": "Gromflomites",
             "skill": "Rigid exoskeleton: small passive AC bonus and Galactic Federation military discipline (flavor only; +1 Dexterity, +1 Constitution).",
             "imageAlt": "Portrait of Cornvelious Daniel (Gromflomite) from the show, distinct visual from the Ciancans race.",
-            "visualDescription": "Insectoids with multiple eyes, usually in blue Galactic Federation uniforms."
+            "visualDescription": "Insectoids with multiple eyes, usually in blue Galactic Federation uniforms.",
+            "secondarySkill": "—",
+            "drawbackDescription": "—"
          },
          "humans": {
             "name": "Humans",
             "skill": "+1 to two attributes of your choice. \"Protagonist's Luck\": once per long rest, reroll one failed ability check.",
             "imageAlt": "Portrait of Morty Smith from the show, human visual reference for Earth (C-137) characters.",
-            "visualDescription": "Adaptable beings from Dimension C-137 (or not). Specialists at surviving interdimensional trauma."
+            "visualDescription": "Adaptable beings from Dimension C-137 (or not). Specialists at surviving interdimensional trauma.",
+            "secondarySkill": "—",
+            "drawbackDescription": "—"
          }
       }
    }

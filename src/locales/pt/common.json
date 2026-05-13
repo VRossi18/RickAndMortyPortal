@@ -84,7 +84,7 @@
    },
    "rpg": {
       "title": "Criação de personagem",
-      "subtitle": "Distribua 27 pontos (custo 1:1). Valor antes do racial: 8 a 15. Total = valor na ficha + bônus racial.",
+      "subtitle": "Distribua 27 pontos (custo 1:1). Valor antes do racial: 8 a 15. Total = valor na ficha + bônus racial + desvantagem.",
       "poolSummary": "{{spent}} / 27 pontos gastos — {{remaining}} restantes",
       "raceHeading": "Raça",
       "selectedRacePreview": "Raça selecionada",
@@ -92,6 +92,7 @@
       "sheetBase": "Base",
       "sheetInvested": "Acima do 8",
       "sheetRacial": "Racial",
+      "sheetDrawback": "Desvantagem",
       "sheetTotal": "Total",
       "suggestedSkill": "Habilidade",
       "highTotalHint": "Total acima de 17 (só destaque visual)",
@@ -101,6 +102,8 @@
       "humanBonusHeading": "Bônus raciais humanos (+1 em cada)",
       "humanBonusSlot1": "Primeiro atributo com +1",
       "humanBonusSlot2": "Segundo atributo com +1",
+      "raceSecondarySkill": "Segunda habilidade racial",
+      "raceDrawback": "Desvantagem",
       "abilities": {
          "str": "Força",
          "dex": "Destreza",
@@ -113,55 +116,73 @@
             "name": "Ciancãs",
             "skill": "Mente de Colmeia Técnica (Inteligência)",
             "imageAlt": "Retrato de Prince Nebulon (Zigerion) da série, usado como referência visual para Ciancãs.",
-            "visualDescription": "Alienígenas de colmeia e golpes tecnológicos: pele verde, olhos vermelhos e barbatanas — energia de golpe intergaláctico."
+            "visualDescription": "Alienígenas de colmeia e golpes tecnológicos: pele verde, olhos vermelhos e barbatanas — energia de golpe intergaláctico.",
+            "secondarySkill": "—",
+            "drawbackDescription": "—"
          },
          "cronenbergs": {
             "name": "Cronenbergs",
             "skill": "Resiliência Mutante (Força)",
             "imageAlt": "Retrato de Cronenberg Rick da série, usado como referência visual para Cronenbergs.",
-            "visualDescription": "Corpos mutantes e carnes expostas em tons avermelhados e orgânicos."
+            "visualDescription": "Corpos mutantes e carnes expostas em tons avermelhados e orgânicos.",
+            "secondarySkill": "—",
+            "drawbackDescription": "—"
          },
          "birdPeople": {
             "name": "Pessoas-Pássaro",
             "skill": "Agilidade Aviária (Destreza)",
             "imageAlt": "Retrato de Birdperson da série, usado como referência visual para Pessoas-Pássaro.",
-            "visualDescription": "Humanóides aviários com penas, bicos e silhueta ágil."
+            "visualDescription": "Humanóides aviários com penas, bicos e silhueta ágil.",
+            "secondarySkill": "—",
+            "drawbackDescription": "—"
          },
          "chuds": {
             "name": "Chuds",
             "skill": "Sobrevivência Subterrânea (Constituição)",
             "imageAlt": "Retrato do CHUD King da série, usado como referência visual para Chuds.",
-            "visualDescription": "Humanoides equinos subterrâneos, fortes e ligados ao submundo."
+            "visualDescription": "Humanoides equinos subterrâneos, fortes e ligados ao submundo.",
+            "secondarySkill": "—",
+            "drawbackDescription": "—"
          },
          "cromulons": {
             "name": "Cromulons",
             "skill": "Show Me What You Got (Performance / Carisma)",
             "imageAlt": "Retrato de Armagheadon (Cromulon) da série, usado como referência visual para Cromulons.",
-            "visualDescription": "Cabeças-planeta gigantes e presença cênica intimidante."
+            "visualDescription": "Cabeças-planeta gigantes e presença cênica intimidante.",
+            "secondarySkill": "—",
+            "drawbackDescription": "—"
          },
          "parasites": {
             "name": "Parasitas",
             "skill": "Memória Falsa (Enganação) — +1 em todos os atributos",
             "imageAlt": "Retrato de Pencilvester (parasita) da série, usado como referência visual para Parasitas.",
-            "visualDescription": "Formas disfarçadas de amigos até revelarem a verdadeira ameaça."
+            "visualDescription": "Formas disfarçadas de amigos até revelarem a verdadeira ameaça.",
+            "secondarySkill": "—",
+            "drawbackDescription": "—"
          },
          "gearPeople": {
             "name": "Gear People",
             "skill": "Manutenção de Engrenagens: bônus em reparar tecnologias e conhecimento sobre a Guerra das Engrenagens (Inteligência).",
             "imageAlt": "Retrato de Anchor Gear (Gear-Person do Mundo das Engrenagens) da série, referência visual para Gear People.",
-            "visualDescription": "Seres mecânicos com engrenagens expostas e tons bronze / metálico."
+            "visualDescription": "Seres mecânicos com engrenagens expostas e tons bronze / metálico.",
+            "secondarySkill": "—",
+            "drawbackDescription": "—"
          },
          "gromflomites": {
             "name": "Gromflomites",
             "skill": "Exoesqueleto rígido: pequeno bônus passivo de CA e disciplina militar da Federação Galáctica (apenas narrativo; +1 Destreza, +1 Constituição).",
             "imageAlt": "Retrato de Cornvelious Daniel (Gromflomite) da série, referência visual distinta da raça Ciancãs.",
-            "visualDescription": "Insetoides com vários olhos, geralmente em uniformes azuis da Federação Galáctica."
+            "visualDescription": "Insetoides com vários olhos, geralmente em uniformes azuis da Federação Galáctica.",
+            "secondarySkill": "—",
+            "drawbackDescription": "—"
          },
          "humans": {
             "name": "Humanos",
             "skill": "+1 em dois atributos à escolha. \"Sorte do Protagonista\": uma vez por descanso longo, pode refazer um teste de atributo que falhou.",
             "imageAlt": "Retrato de Morty Smith da série, referência visual humana para personagens da Terra (C-137).",
-            "visualDescription": "Seres adaptáveis da Dimensão C-137 (ou não). Especialistas em sobreviver a traumas interdimensionais."
+            "visualDescription": "Seres adaptáveis da Dimensão C-137 (ou não). Especialistas em sobreviver a traumas interdimensionais.",
+            "secondarySkill": "—",
+            "drawbackDescription": "—"
          }
       }
    }

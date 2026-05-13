@@ -1,10 +1,10 @@
 import { render, screen } from '@testing-library/react';
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import { describe, expect, it } from 'vitest';
-import { AppShell } from './AppShell';
-import { AboutPage } from '../pages/AboutPage';
-import { HomePage } from '../pages/HomePage';
-import { RpgCharacterCreationPage } from '../pages/RpgCharacterCreationPage';
+import { AppShell } from '../../components/AppShell';
+import { AboutPage } from '../../pages/AboutPage';
+import { HomePage } from '../../pages/HomePage';
+import { RpgCharacterCreationPage } from '../../pages/RpgCharacterCreationPage';
 
 function renderShell(initialPath: string) {
    return render(

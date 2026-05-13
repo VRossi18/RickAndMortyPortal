@@ -2,12 +2,12 @@ import { AxiosError } from 'axios';
 import { render, screen } from '@testing-library/react';
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import i18n from '../i18n';
-import { CharacterService } from '../services/characters';
-import type { Character } from '../types/api';
-import { CharacterDetailPage } from './CharacterDetailPage';
+import i18n from '../../i18n';
+import { CharacterService } from '../../services/characters';
+import type { Character } from '../../types/api';
+import { CharacterDetailPage } from '../../pages/CharacterDetailPage';
 
-vi.mock('../services/characters', () => ({
+vi.mock('../../services/characters', () => ({
    CharacterService: {
       getCharacterById: vi.fn(),
    },

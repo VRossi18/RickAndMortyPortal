@@ -2,9 +2,9 @@ import { fireEvent, render, screen } from '@testing-library/react';
 import type { ReactElement } from 'react';
 import { MemoryRouter } from 'react-router-dom';
 import { describe, expect, it } from 'vitest';
-import type { Character } from '../types/api';
-import i18n from '../i18n';
-import { CharacterCard } from './CharacterCard';
+import type { Character } from '../../types/api';
+import i18n from '../../i18n';
+import { CharacterCard } from '../../components/CharacterCard';
 
 const character: Character = {
    id: 1,
