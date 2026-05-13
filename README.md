@@ -10,7 +10,7 @@ A small **React** app that browses characters from the [Rick and Morty API](http
 
 The **primary goal** is to get comfortable with **GitHub Actions** in a real (but small) codebase: defining when workflows run, wiring Node and pnpm, splitting work across jobs, publishing static assets to **GitHub Pages**, and failing fast when lint or tests break. The UI is the fun part; the pipeline is the lesson.
 
-Beyond CI/CD, the project is meant to grow a **playable Rick and Morty–inspired RPG loop** where a **large language model** can help run a session (narration, rolls, or structured prompts tied to the character sheet). The current **`/rpg`** route is the first slice: point-buy creation, racial modifiers, drawbacks, and live totals. You can **export the sheet as JSON** (full 27-point spend required; confirmation dialog) for LLM sessions—see [`buildCharacterSheetExport`](src/components/rpg/buildCharacterSheetExport.ts). The pipeline also publishes a **sample JSON artifact** so the schema stays documented in CI. Future work can add session UI, an API/MCP surface, or richer prompts while keeping the static GitHub Pages story where possible.
+Beyond CI/CD, the project is meant to grow a **playable Rick and Morty–inspired RPG loop** where a **large language model** can help run a session (narration, rolls, or structured prompts tied to the character sheet). The current **`/rpg`** route is the first slice: point-buy creation, racial modifiers, drawbacks, and live totals. You can **export the sheet as JSON** (full 27-point spend required; confirmation dialog) for LLM sessions—see [`buildCharacterSheetExport`](src/components/rpg/buildCharacterSheetExport.ts). The pipeline also publishes a **sample JSON artifact** so the schema stays documented in CI. Successful **production deploys on `main`** bump an automatic **SemVer-style patch tag** (`v1.0.1`, `v1.0.2`, …) using [`.github/version-prefix`](.github/version-prefix). Future work can add session UI, an API/MCP surface, or richer prompts while keeping the static GitHub Pages story where possible.
 
 ### What the pipeline does
 
@@ -19,6 +19,7 @@ Beyond CI/CD, the project is meant to grow a **playable Rick and Morty–inspire
 | **Lint and test** | Every push and PR to `main` | `pnpm install` → `pnpm lint` → `pnpm test` → `pnpm run rpg:write-export-sample` → upload **`rpg-character-export-sample`** (`actions/upload-artifact@v5`) |
 | **Build and audit** | After lint and test succeed | `pnpm install` → `pnpm run build` → `pnpm audit` → (on `main` push only) upload `dist` as a Pages artifact |
 | **Deploy GitHub Pages** | After build, only on **`push` to `main`** | `actions/deploy-pages` publishes the uploaded artifact |
+| **Tag release (patch)** | After a successful Pages deploy on **`push` to `main`** | Reads [`.github/version-prefix`](.github/version-prefix) (`MAJOR.MINOR`, e.g. `1.0`), finds the latest `v{MAJOR}.{MINOR}.{patch}` tag, increments **patch**, and pushes the new tag (first in a series is `v1.0.1`). Edit the prefix file manually for a new **major/minor** line (e.g. `2.0` → `v2.0.1`, …). |
 
 The production build runs [`scripts/copy-404.mjs`](scripts/copy-404.mjs) after Vite so **`dist/404.html`** mirrors `index.html`. That helps the hosted SPA when users refresh or open a deep link such as `/rick-morty-portal/character/2` on GitHub Pages.
 
@@ -46,13 +47,17 @@ flowchart LR
    subgraph job3 [deploy-pages]
       deploy[deploy-pages]
    end
+   subgraph job4 [tag-deploy]
+      tagBump[bump patch tag and push]
+   end
    push --> job1
    pr --> job1
    job1 -->|needs success| job2
    job2 -->|main push only| job3
+   job3 -->|main push success| job4
 ```
 
-Workflow file: [`.github/workflows/pipeline.yml`](.github/workflows/pipeline.yml). In the repo **Settings → Pages**, the source should be **GitHub Actions** so the deploy job can run.
+Workflow file: [`.github/workflows/pipeline.yml`](.github/workflows/pipeline.yml). In the repo **Settings → Pages**, the source should be **GitHub Actions** so the deploy job can run. The **tag-deploy** job sets **`contents: write`** only on that job so it can push tags; the rest of the workflow keeps the default `contents: read` where applicable.
 
 ---
 
