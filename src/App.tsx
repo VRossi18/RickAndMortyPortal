@@ -4,6 +4,7 @@ import { AppShell } from './components/AppShell';
 import { AboutPage } from './pages/AboutPage';
 import { CharacterDetailPage } from './pages/CharacterDetailPage';
 import { HomePage } from './pages/HomePage';
+import { RpgCharacterCreationPage } from './pages/RpgCharacterCreationPage';
 
 export default function App() {
    const location = useLocation();
@@ -15,6 +16,7 @@ export default function App() {
                <Route index element={<Navigate to="/characters" replace />} />
                <Route path="characters" element={<HomePage />} />
                <Route path="about" element={<AboutPage />} />
+               <Route path="rpg" element={<RpgCharacterCreationPage />} />
                <Route path="character/:id" element={<CharacterDetailPage />} />
             </Route>
          </Routes>

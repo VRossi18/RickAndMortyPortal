@@ -2,7 +2,8 @@
    "nav": {
       "ariaMain": "Main",
       "about": "About me",
-      "characters": "Rick & Morty Characters"
+      "characters": "Rick & Morty Characters",
+      "rpg": "Rick and Morty RPG"
    },
    "language": {
       "switchToPt": "Switch language to Portuguese",
@@ -80,5 +81,88 @@
       "linkedin": "LinkedIn",
       "x": "X",
       "github": "GitHub"
+   },
+   "rpg": {
+      "title": "Character creation",
+      "subtitle": "Spend 27 points (1:1 cost). Score before racial modifiers: 8–15. Total = sheet score + racial bonus.",
+      "poolSummary": "{{spent}} / 27 points spent — {{remaining}} left",
+      "raceHeading": "Race",
+      "selectedRacePreview": "Selected race",
+      "abilitiesHeading": "Abilities",
+      "sheetBase": "Base",
+      "sheetInvested": "Above 8",
+      "sheetRacial": "Racial",
+      "sheetTotal": "Total",
+      "suggestedSkill": "Skill",
+      "highTotalHint": "Total over 17 (visual highlight only)",
+      "increment": "Increase",
+      "decrement": "Decrease",
+      "raceSelectAria": "Select race {{race}}",
+      "humanBonusHeading": "Human racial bonuses (+1 each)",
+      "humanBonusSlot1": "First +1 attribute",
+      "humanBonusSlot2": "Second +1 attribute",
+      "abilities": {
+         "str": "Strength",
+         "dex": "Dexterity",
+         "con": "Constitution",
+         "int": "Intelligence",
+         "cha": "Charisma"
+      },
+      "races": {
+         "ciancans": {
+            "name": "Ciancans",
+            "skill": "Technical Hive Mind (Intelligence)",
+            "imageAlt": "Portrait of Prince Nebulon (Zigerion) from the show, used as visual reference for Ciancans.",
+            "visualDescription": "Scam-prone hive-minded aliens with green skin, red eyes, and fin-like frills—tech hustle energy."
+         },
+         "cronenbergs": {
+            "name": "Cronenbergs",
+            "skill": "Mutant Resilience (Strength)",
+            "imageAlt": "Portrait of Cronenberg Rick from the show, used as visual reference for Cronenbergs.",
+            "visualDescription": "Mutated bodies and exposed organic tissue in red, fleshy tones."
+         },
+         "birdPeople": {
+            "name": "Bird-Person",
+            "skill": "Avian Agility (Dexterity)",
+            "imageAlt": "Portrait of Birdperson from the show, used as visual reference for Bird-Person.",
+            "visualDescription": "Avian humanoids with feathers, beaks, and a nimble silhouette."
+         },
+         "chuds": {
+            "name": "Chuds",
+            "skill": "Subterranean Survival (Constitution)",
+            "imageAlt": "Portrait of CHUD King from the show, used as visual reference for Chuds.",
+            "visualDescription": "Subterranean equine humanoids—tough and tied to the underworld."
+         },
+         "cromulons": {
+            "name": "Cromulons",
+            "skill": "Show Me What You Got (Performance / Charisma)",
+            "imageAlt": "Portrait of Armagheadon (Cromulon) from the show, used as visual reference for Cromulons.",
+            "visualDescription": "Giant planet heads with a strong, performative presence."
+         },
+         "parasites": {
+            "name": "Parasites",
+            "skill": "False Memory (Deception) — +1 to every ability",
+            "imageAlt": "Portrait of Pencilvester (parasite) from the show, used as visual reference for Parasites.",
+            "visualDescription": "Shapes that pose as friends until the real threat is revealed."
+         },
+         "gearPeople": {
+            "name": "Gear People",
+            "skill": "Gear maintenance: bonus when repairing tech and knowledge of the Gear Wars (Intelligence).",
+            "imageAlt": "Portrait of Anchor Gear (Gear-Person from Gear World) from the show, visual reference for Gear People.",
+            "visualDescription": "Mechanical beings with exposed gears and bronze / metallic tones."
+         },
+         "gromflomites": {
+            "name": "Gromflomites",
+            "skill": "Rigid exoskeleton: small passive AC bonus and Galactic Federation military discipline (flavor only; +1 Dexterity, +1 Constitution).",
+            "imageAlt": "Portrait of Cornvelious Daniel (Gromflomite) from the show, distinct visual from the Ciancans race.",
+            "visualDescription": "Insectoids with multiple eyes, usually in blue Galactic Federation uniforms."
+         },
+         "humans": {
+            "name": "Humans",
+            "skill": "+1 to two attributes of your choice. \"Protagonist's Luck\": once per long rest, reroll one failed ability check.",
+            "imageAlt": "Portrait of Morty Smith from the show, human visual reference for Earth (C-137) characters.",
+            "visualDescription": "Adaptable beings from Dimension C-137 (or not). Specialists at surviving interdimensional trauma."
+         }
+      }
    }
 }

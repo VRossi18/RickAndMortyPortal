@@ -115,7 +115,7 @@ export function HomePage() {
       return () => {
          isMounted = false;
       };
-   }, [page, listFilters]); // eslint-disable-line react-hooks/exhaustive-deps -- list load keyed by page/filters only; i18n.t in catch avoids stale closure without refetch-on-locale
+   }, [page, listFilters]); // eslint-disable-line react-hooks/exhaustive-deps
 
    const handleBeforeNavigate = (id: number) => {
       flushSync(() => {
@@ -147,7 +147,8 @@ export function HomePage() {
       >
          <header className="px-4 pb-6 pt-8 text-center md:pt-10">
             <h1 className="text-5xl font-black tracking-tighter text-[var(--text-color)] md:text-6xl">
-               {t('home.hero.title')} <span className="text-primary">{t('home.hero.titleAccent')}</span>
+               {t('home.hero.title')}{' '}
+               <span className="text-primary">{t('home.hero.titleAccent')}</span>
             </h1>
             <p className="mt-4 font-medium tracking-wide text-slate-500 dark:text-slate-400">
                {t('home.hero.subtitle')}
@@ -195,7 +196,9 @@ export function HomePage() {
                      <p className="text-base font-semibold text-[var(--text-color)]">
                         {t('home.empty.title')}
                      </p>
-                     <p className="max-w-md text-sm text-muted-foreground">{t('home.empty.hint')}</p>
+                     <p className="max-w-md text-sm text-muted-foreground">
+                        {t('home.empty.hint')}
+                     </p>
                   </div>
                ) : (
                   <div
@@ -227,7 +230,9 @@ export function HomePage() {
                      aria-live="polite"
                   >
                      <div className="h-10 w-10 animate-spin rounded-full border-4 border-primary border-t-transparent"></div>
-                     <p className="animate-pulse text-sm font-bold text-primary">{t('home.loading')}</p>
+                     <p className="animate-pulse text-sm font-bold text-primary">
+                        {t('home.loading')}
+                     </p>
                   </div>
                ) : null}
             </div>

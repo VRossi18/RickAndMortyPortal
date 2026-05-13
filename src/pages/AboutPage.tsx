@@ -68,7 +68,7 @@ export function AboutPage() {
                      <img
                         src={PORTRAIT_SRC}
                         alt={t('about.portraitAlt')}
-                        className="aspect-[3/4] w-full object-cover object-top"
+                        className="w-full object-cover object-top"
                         width={640}
                         height={853}
                         decoding="async"

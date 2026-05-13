@@ -222,3 +222,27 @@
       box-shadow: 0 0 8px currentColor;
    }
 }
+
+@keyframes rpgGearSpin {
+   from {
+      transform: rotate(0deg);
+   }
+   to {
+      transform: rotate(360deg);
+   }
+}
+
+.rpg-gear-spin {
+   animation: rpgGearSpin 2.4s linear infinite;
+}
+
+.rpg-gear-spin-rev {
+   animation: rpgGearSpin 2s linear infinite reverse;
+}
+
+@media (prefers-reduced-motion: reduce) {
+   .rpg-gear-spin,
+   .rpg-gear-spin-rev {
+      animation: none;
+   }
+}

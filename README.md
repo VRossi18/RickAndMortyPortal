@@ -76,13 +76,14 @@ Workflow file: [`.github/workflows/pipeline.yml`](.github/workflows/pipeline.yml
 - **Internationalization (PT / EN)** — UI strings live in locale JSON; language is stored in **`localStorage`** (`portal.locale`, default `pt`); **`document.documentElement.lang`** stays in sync; **navbar flag switcher** ([`LanguageSwitcher`](src/components/LanguageSwitcher.tsx))
 - Light / dark theme toggle
 - Responsive layout
+- **Rick and Morty RPG (v1)** — point-buy **character creator** at **`/rpg`**: six races with racial modifiers, 27-point pool, scores 8–15 before racial, live totals; see [`CharacterSheetContainer`](src/features/rpg/CharacterSheetContainer.tsx) and [`useCharacterCreation`](src/features/rpg/useCharacterCreation.ts)
 - **`import.meta.env.BASE_URL`** as the router `basename` in production so asset paths and routes stay correct under a GitHub Pages project URL (see [`vite.config.ts`](vite.config.ts))
 
 ---
 
 ## Roadmap
 
-1. **Rick and Morty tabletop RPG** — tie the portal to the *Rick and Morty* RPG (e.g. reference tables, dimension / gear ideas, or a small “session tools” area) without replacing the API-driven character browser
+1. **Rick and Morty tabletop RPG** — extend **`/rpg`** (session tools, episode links, or printed-sheet export) beyond the current point-buy creator
 
 ---
 

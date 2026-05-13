@@ -1,0 +1,16 @@
+import { motion } from 'framer-motion';
+import { CharacterSheetContainer } from '../features/rpg/CharacterSheetContainer';
+
+export function RpgCharacterCreationPage() {
+   return (
+      <motion.div
+         className="min-h-screen bg-[var(--bg-color)] text-[var(--text-color)]"
+         initial={{ opacity: 0 }}
+         animate={{ opacity: 1 }}
+         exit={{ opacity: 0 }}
+         transition={{ duration: 0.25, ease: 'easeOut' }}
+      >
+         <CharacterSheetContainer />
+      </motion.div>
+   );
+}
