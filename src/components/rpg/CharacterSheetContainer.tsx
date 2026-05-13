@@ -1,6 +1,8 @@
 import clsx from 'clsx';
-import { useState } from 'react';
+import { useCallback, useId, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { buildCharacterSheetExport } from './buildCharacterSheetExport';
+import type { CharacterSheetExportTranslate } from './buildCharacterSheetExport';
 import { BASE_SCORE, MAX_SCORE_BEFORE_RACE } from './characterCreationMath';
 import { RACES } from './races';
 import { useCharacterCreation } from './useCharacterCreation';
@@ -44,8 +46,22 @@ function RacePortrait({
    );
 }
 
+function downloadJsonFile(filename: string, data: unknown) {
+   const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+   const url = URL.createObjectURL(blob);
+   const anchor = document.createElement('a');
+   anchor.href = url;
+   anchor.download = filename;
+   anchor.rel = 'noopener';
+   anchor.click();
+   URL.revokeObjectURL(url);
+}
+
 export function CharacterSheetContainer() {
-   const { t } = useTranslation('common');
+   const { t, i18n } = useTranslation('common');
+   const exportDialogRef = useRef<HTMLDialogElement>(null);
+   const exportDialogTitleId = useId();
+   const exportDialogDescId = useId();
    const {
       selectedRaceId,
       selectedRace,
@@ -74,6 +90,59 @@ export function CharacterSheetContainer() {
       `rpg.races.${selectedRace.id}.drawbackDescription` as 'rpg.title',
    );
 
+   const canExportJson = remaining === 0;
+
+   const performExportJson = useCallback(() => {
+      if (remaining !== 0) {
+         return;
+      }
+      const payload = buildCharacterSheetExport(t as unknown as CharacterSheetExportTranslate, {
+         exportedAt: new Date().toISOString(),
+         locale: i18n.language,
+         selectedRaceId,
+         selectedRace,
+         scores,
+         sheetRacialBonus,
+         sheetDrawback,
+         totals,
+         highTotalFlags,
+         spent,
+         remaining,
+         humanBonusChoices,
+      });
+      const safeIso = new Date().toISOString().replaceAll(':', '-');
+      downloadJsonFile(`rnm-rpg-character-${selectedRaceId}-${safeIso}.json`, payload);
+   }, [
+      t,
+      i18n.language,
+      humanBonusChoices,
+      remaining,
+      scores,
+      selectedRace,
+      selectedRaceId,
+      sheetDrawback,
+      sheetRacialBonus,
+      spent,
+      totals,
+      highTotalFlags,
+   ]);
+
+   const openExportConfirmDialog = useCallback(() => {
+      if (remaining !== 0) {
+         return;
+      }
+      exportDialogRef.current?.showModal();
+   }, [remaining]);
+
+   const closeExportConfirmDialog = useCallback(() => {
+      exportDialogRef.current?.close();
+   }, []);
+
+   const handleConfirmExport = useCallback(() => {
+      performExportJson();
+      closeExportConfirmDialog();
+   }, [performExportJson, closeExportConfirmDialog]);
+
    return (
       <div className="mx-auto max-w-5xl space-y-10 px-4 py-8 md:py-12">
          <header className="space-y-2 text-center md:text-left">
@@ -81,10 +150,64 @@ export function CharacterSheetContainer() {
                {t('rpg.title')}
             </h1>
             <p className="text-sm text-muted-foreground md:max-w-2xl">{t('rpg.subtitle')}</p>
-            <p className="text-sm font-semibold text-primary">
-               {t('rpg.poolSummary', { spent, remaining })}
-            </p>
+            <div className="flex flex-col items-center gap-3 sm:flex-row sm:flex-wrap sm:justify-start">
+               <p className="text-sm font-semibold text-primary">
+                  {t('rpg.poolSummary', { spent, remaining })}
+               </p>
+               <button
+                  type="button"
+                  onClick={openExportConfirmDialog}
+                  disabled={!canExportJson}
+                  title={canExportJson ? undefined : t('rpg.exportBlockedHint')}
+                  className={clsx(
+                     'rounded-lg border px-4 py-2 text-sm font-semibold transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-400 focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--bg-color)]',
+                     canExportJson
+                        ? 'border-primary/60 bg-primary/10 text-primary hover:bg-primary/15'
+                        : 'cursor-not-allowed border-border/60 bg-muted/30 text-muted-foreground',
+                  )}
+                  aria-label={canExportJson ? t('rpg.exportJsonAria') : t('rpg.exportBlockedAria')}
+               >
+                  {t('rpg.exportJson')}
+               </button>
+            </div>
+            {!canExportJson ? (
+               <p className="text-center text-xs text-muted-foreground sm:text-left" role="status">
+                  {t('rpg.exportBlockedHint')}
+               </p>
+            ) : null}
          </header>
+
+         <dialog
+            ref={exportDialogRef}
+            className="w-[min(100%,24rem)] max-w-[calc(100vw-2rem)] rounded-2xl border border-border bg-card p-6 text-foreground shadow-2xl backdrop:bg-black/55"
+            aria-labelledby={exportDialogTitleId}
+            aria-describedby={exportDialogDescId}
+         >
+            <div className="space-y-4">
+               <h2 id={exportDialogTitleId} className="text-lg font-black tracking-tight">
+                  {t('rpg.exportConfirmTitle')}
+               </h2>
+               <p id={exportDialogDescId} className="text-sm text-muted-foreground">
+                  {t('rpg.exportConfirmDescription')}
+               </p>
+               <div className="flex flex-col-reverse gap-2 pt-2 sm:flex-row sm:justify-end">
+                  <button
+                     type="button"
+                     onClick={closeExportConfirmDialog}
+                     className="rounded-lg border border-border bg-background px-4 py-2 text-sm font-semibold text-foreground transition hover:bg-muted/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-400"
+                  >
+                     {t('rpg.exportConfirmCancel')}
+                  </button>
+                  <button
+                     type="button"
+                     onClick={handleConfirmExport}
+                     className="rounded-lg border border-primary/60 bg-primary/15 px-4 py-2 text-sm font-semibold text-primary transition hover:bg-primary/25 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-400"
+                  >
+                     {t('rpg.exportConfirmDownload')}
+                  </button>
+               </div>
+            </div>
+         </dialog>
 
          <section aria-labelledby="rpg-race-heading" className="space-y-4">
             <h2 id="rpg-race-heading" className="text-lg font-bold text-foreground">

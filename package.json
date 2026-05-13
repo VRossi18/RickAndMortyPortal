@@ -13,7 +13,8 @@
       "lint": "eslint .",
       "preview": "vite preview",
       "test": "vitest run",
-      "test:watch": "vitest"
+      "test:watch": "vitest",
+      "rpg:write-export-sample": "tsx scripts/write-rpg-character-export-sample.ts"
    },
    "pnpm": {
       "onlyBuiltDependencies": [
@@ -51,6 +52,7 @@
       "jsdom": "^26.1.0",
       "postcss": "^8.5.14",
       "tailwindcss": "^4.2.4",
+      "tsx": "^4.21.0",
       "typescript": "~6.0.2",
       "typescript-eslint": "^8.58.2",
       "vite": "^8.0.10",

@@ -16,6 +16,7 @@ concurrency:
    cancel-in-progress: true
 
 permissions:
+   actions: write
    contents: read
    pages: write
    id-token: write
@@ -40,6 +41,13 @@ jobs:
               pnpm install
               pnpm lint
               pnpm test
+         - name: Write RPG character export sample (CI fixture)
+           run: pnpm run rpg:write-export-sample
+         - name: Upload RPG character export sample
+           uses: actions/upload-artifact@v5
+           with:
+              name: rpg-character-export-sample
+              path: artifacts/rpg-character-export.sample.json
 
    build-audit-package:
       name: Build, audit and package

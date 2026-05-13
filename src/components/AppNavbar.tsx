@@ -5,7 +5,7 @@ import { LanguageSwitcher } from './LanguageSwitcher';
 
 const tabClass = ({ isActive }: { isActive: boolean }) =>
    clsx(
-      'inline-flex items-center border-b-2 border-transparent px-3 py-3 text-sm font-semibold transition-colors md:px-4',
+      'inline-flex shrink-0 items-center whitespace-nowrap border-b-2 border-transparent px-3 py-3 text-sm font-semibold transition-colors md:px-4',
       isActive
          ? 'border-primary text-primary'
          : 'text-muted-foreground hover:text-foreground',
@@ -21,7 +21,7 @@ export function AppNavbar() {
          aria-label={t('nav.ariaMain')}
       >
          <div className="mx-auto flex max-w-[1400px] items-center justify-between gap-3 px-4">
-            <div className="flex min-w-0 flex-1 items-center gap-1 md:gap-2">
+            <div className="flex min-w-0 flex-1 flex-nowrap items-center gap-1 overflow-x-auto overflow-y-hidden overscroll-x-contain [-webkit-overflow-scrolling:touch] [scrollbar-width:thin] md:gap-2 md:overflow-x-visible">
                <NavLink to="/about" className={tabClass}>
                   {t('nav.about')}
                </NavLink>
