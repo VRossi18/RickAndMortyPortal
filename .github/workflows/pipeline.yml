@@ -26,13 +26,13 @@ jobs:
       runs-on: ubuntu-latest
       steps:
          - name: checkout
-           uses: actions/checkout@v4
+           uses: actions/checkout@v5
          - name: install node
-           uses: actions/setup-node@v4
+           uses: actions/setup-node@v5
            with:
               node-version: ${{ env.NODE_VERSION }}
          - name: install pnpm (package manager)
-           uses: pnpm/action-setup@v4
+           uses: pnpm/action-setup@v5
            with:
               version: ${{ env.PACKAGE_MANAGER_VERSION }}
          - name: Test and audit
@@ -47,13 +47,13 @@ jobs:
       runs-on: ubuntu-latest
       steps:
          - name: checkout
-           uses: actions/checkout@v4
+           uses: actions/checkout@v5
          - name: install node
-           uses: actions/setup-node@v4
+           uses: actions/setup-node@v5
            with:
               node-version: '24.15.0'
          - name: install pnpm (package manager)
-           uses: pnpm/action-setup@v4
+           uses: pnpm/action-setup@v5
            with:
               version: 10.15.0
          - name: Build and audit
