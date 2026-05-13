@@ -10,13 +10,13 @@ A small **React** app that browses characters from the [Rick and Morty API](http
 
 The **primary goal** is to get comfortable with **GitHub Actions** in a real (but small) codebase: defining when workflows run, wiring Node and pnpm, splitting work across jobs, publishing static assets to **GitHub Pages**, and failing fast when lint or tests break. The UI is the fun part; the pipeline is the lesson.
 
-Beyond CI/CD, the project is meant to grow a **playable Rick and Morty–inspired RPG loop** where a **large language model** can help run a session (narration, rolls, or structured prompts tied to the character sheet). The current **`/rpg`** route is the first slice: point-buy creation, racial modifiers, drawbacks, and live totals—future work can add session UI, sheet export (e.g. JSON), or an API/MCP surface so an LLM can read state and respond consistently within GitHub Pages constraints where possible.
+Beyond CI/CD, the project is meant to grow a **playable Rick and Morty–inspired RPG loop** where a **large language model** can help run a session (narration, rolls, or structured prompts tied to the character sheet). The current **`/rpg`** route is the first slice: point-buy creation, racial modifiers, drawbacks, and live totals. You can **export the sheet as JSON** (full 27-point spend required; confirmation dialog) for LLM sessions—see [`buildCharacterSheetExport`](src/components/rpg/buildCharacterSheetExport.ts). The pipeline also publishes a **sample JSON artifact** so the schema stays documented in CI. Future work can add session UI, an API/MCP surface, or richer prompts while keeping the static GitHub Pages story where possible.
 
 ### What the pipeline does
 
 | Job | When | Steps |
 | --- | --- | --- |
-| **Lint and test** | Every push and PR to `main` | `pnpm install` → `pnpm lint` → `pnpm test` |
+| **Lint and test** | Every push and PR to `main` | `pnpm install` → `pnpm lint` → `pnpm test` → `pnpm run rpg:write-export-sample` → upload **`rpg-character-export-sample`** (`actions/upload-artifact@v5`) |
 | **Build and audit** | After lint and test succeed | `pnpm install` → `pnpm run build` → `pnpm audit` → (on `main` push only) upload `dist` as a Pages artifact |
 | **Deploy GitHub Pages** | After build, only on **`push` to `main`** | `actions/deploy-pages` publishes the uploaded artifact |
 
@@ -32,7 +32,9 @@ flowchart LR
       install1[pnpm install]
       lint[pnpm lint]
       test[pnpm test]
-      install1 --> lint --> test
+      rpgSample[rpg write-export-sample]
+      artifact[upload-artifact sample JSON]
+      install1 --> lint --> test --> rpgSample --> artifact
    end
    subgraph job2 [build-and-audit]
       install2[pnpm install]
@@ -62,7 +64,7 @@ Workflow file: [`.github/workflows/pipeline.yml`](.github/workflows/pipeline.yml
 - **Styling:** Tailwind CSS 4, FlyonUI, `clsx` / `tailwind-merge`
 - **Data:** Axios (`GET /character` for lists, `GET /character/:id` for details — see [`CharacterService`](src/services/characters.ts))
 - **i18n:** `i18next` + `react-i18next`, copy in [`src/locales/pt/common.json`](src/locales/pt/common.json) / [`src/locales/en/common.json`](src/locales/en/common.json), bootstrap in [`src/i18n.ts`](src/i18n.ts)
-- **Quality:** ESLint (flat config), Vitest, Testing Library, jsdom
+- **Quality:** ESLint (flat config), Vitest, Testing Library, jsdom; **tsx** (dev) to run [`scripts/write-rpg-character-export-sample.ts`](scripts/write-rpg-character-export-sample.ts) for the CI JSON fixture
 - **Learning / experiments:** More real-world practice with the stack above; upcoming **LLM integration** (hosted APIs, structured prompts, or MCP) to support a **playable** tabletop-style loop alongside the UI
 
 ---
@@ -79,14 +81,14 @@ Workflow file: [`.github/workflows/pipeline.yml`](.github/workflows/pipeline.yml
 - **Internationalization (PT / EN)** — UI strings live in locale JSON; language is stored in **`localStorage`** (`portal.locale`, default `pt`); **`document.documentElement.lang`** stays in sync; **navbar flag switcher** ([`LanguageSwitcher`](src/components/LanguageSwitcher.tsx))
 - Light / dark theme toggle
 - Responsive layout
-- **Rick and Morty RPG (v1)** — point-buy **character creator** at **`/rpg`**: multiple races with racial modifiers and drawbacks, 27-point pool, scores 8–15 before racial, live totals; foundation for future LLM-driven playtests and GM tooling. See [`CharacterSheetContainer`](src/components/rpg/CharacterSheetContainer.tsx) and [`useCharacterCreation`](src/components/rpg/useCharacterCreation.ts)
+- **Rick and Morty RPG (v1)** — point-buy **character creator** at **`/rpg`**: multiple races with racial modifiers and drawbacks, 27-point pool, scores 8–15 before racial, live totals; **JSON export** for LLM-friendly character payloads (full pool must be spent; confirm in a dialog before download); foundation for future playtests and GM tooling. See [`CharacterSheetContainer`](src/components/rpg/CharacterSheetContainer.tsx), [`useCharacterCreation`](src/components/rpg/useCharacterCreation.ts), and [`buildCharacterSheetExport`](src/components/rpg/buildCharacterSheetExport.ts)
 - **`import.meta.env.BASE_URL`** as the router `basename` in production so asset paths and routes stay correct under a GitHub Pages project URL (see [`vite.config.ts`](vite.config.ts))
 
 ---
 
 ## Roadmap
 
-1. **LLM-playable tabletop RPG** — evolve **`/rpg`** into a session you can run with an LLM (clear prompts, sheet JSON export, optional small backend or MCP) while keeping the static app and GitHub Pages story in mind; add session tools, episode links, or printed-sheet export as needed
+1. **LLM-playable tabletop RPG** — evolve **`/rpg`** into a session you can run with an LLM (session UI, richer prompts, optional small backend or MCP) while keeping the static app and GitHub Pages story in mind; JSON export is already the first integration surface for external tools
 
 ---
 
@@ -113,5 +115,6 @@ Open the URL Vite prints (usually `http://localhost:5173`). In dev, the app live
 | `pnpm lint` | Run ESLint on the project |
 | `pnpm test` | Run Vitest once (CI mode) |
 | `pnpm test:watch` | Run Vitest in watch mode |
+| `pnpm rpg:write-export-sample` | Write `artifacts/rpg-character-export.sample.json` (same schema as the UI export; used in CI for the downloadable artifact) |
 
-These mirror what runs in GitHub Actions so local results should match CI (the `404.html` step runs inside `pnpm build`).
+These mirror what runs in GitHub Actions so local results should match CI (the `404.html` step runs inside `pnpm build`; the sample JSON step runs in **Lint and test** after tests).
