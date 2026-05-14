@@ -113,6 +113,21 @@
       "raceDrawbackFlavor": "Notes",
       "exportJson": "Export JSON",
       "exportJsonAria": "Download character sheet as JSON for an LLM session or backup",
+      "createCharacter": "Create character",
+      "createCharacterAria": "Open confirmation to finalize your character and view the full sheet",
+      "createBlockedHint": "Spend all 27 points and enter a name before creating.",
+      "createBlockedAria": "Create character (disabled until sheet is complete)",
+      "createConfirmTitle": "Create this character?",
+      "createConfirmDescription": "You are about to lock in this build: race, name, point-buy, and all derived combat/social values. You can still export JSON afterward from the summary.",
+      "createConfirmBack": "Go back",
+      "createConfirmYes": "Yes, create",
+      "createdTitle": "Character ready",
+      "createdSubtitle": "Here is your full sheet—stats, derived values, and racial skills.",
+      "createdClose": "Close",
+      "createdExportJson": "Export JSON",
+      "createdExportJsonAria": "Download this character as JSON",
+      "createdStartGame": "Start game",
+      "createdStartGameHint": "Coming soon — this button is a placeholder for now.",
       "exportBlockedHint": "Spend all 27 points before you can export.",
       "exportBlockedAria": "Export JSON (disabled until all points are spent)",
       "exportBlockedNameHint": "Enter a character name before you can export.",
@@ -121,7 +136,50 @@
       "exportConfirmDescription": "A JSON file will download with your character name, race, abilities, and pool totals—ready to paste into an LLM session.",
       "exportConfirmCancel": "Cancel",
       "exportConfirmDownload": "Download JSON",
-      "llmInstructions": "Treat this JSON as the player's current Rick and Morty–style character sheet. Use character.name when addressing the player character. Use abilities[].total and abilities[].d20Modifier (floor((total-10)/2)) when resolving checks unless your table uses different rules. Respect race.drawbackModifiers and narrative fields under race. Point-buy limits are under rules and pointPool.",
+      "llmInstructions": "Treat this JSON as the player's current Rick and Morty–style character sheet (meta.schemaVersion 3). Use character.name when addressing the player. Use abilities[].total and abilities[].d20Modifier (floor((total-10)/2)) for checks unless your table differs. Use derived for combat/social shorthand: hitPointsMax, physicalAttackRating (STR channel), magicalAttackRating (INT channel), socialInfluencePool (CHA, out of combat), extraStrikesBeforeEnemy / dexSpeedTier (DEX initiative cadence), stealthRating (DEX + stealthRacialBonus for subtle movement), stealthRacialBonus (0 or +2). Use race.skills (two attacks, support, item with outOfCombat) for per-race actions. For humans, human.playstyle describes generic item/build flexibility. rules.derivedFormulas explains the math strings. Respect race.drawbackModifiers and pointPool.",
+      "derivedFormulas": {
+         "hitPoints": "hitPointsMax = 10 + Constitution total (vitality / HP pool).",
+         "physicalAttack": "physicalAttackRating = Strength total (physical damage channel).",
+         "magicalAttack": "magicalAttackRating = Intelligence total (magical damage channel).",
+         "socialPool": "socialInfluencePool = Charisma total (conversation and influence outside combat).",
+         "dexSpeed": "extraStrikesBeforeEnemy from Dexterity total: 0 if DEX < 14, 1 for 14–15, 2 for 16–17, 3 if DEX ≥ 18 (extra player strikes before a typical enemy's first strike).",
+         "stealth": "stealthRating = Dexterity total + stealthRacialBonus (0, or +2 for Bird-Person and Parasites—moving unseen, infiltration, tailing)."
+      },
+      "human": {
+         "playstyleTitle": "Versatile baseline",
+         "playstyleSummary": "Humans may wield any item category your table allows and support many builds (martial, caster, face, skirmisher). Their racial +1s are flexible—re-flavor gear and stunts freely."
+      },
+      "cheatSheet": {
+         "title": "Combat and social cheat-sheet",
+         "description": "How your final ability totals map to HP, damage channels, talk pool, stealth (moving unseen), and DEX attack cadence. Values update when you change scores or race.",
+         "hitPointsLabel": "Max HP",
+         "hitPointsHelp": "Constitution total plus 10 — stamina and staying power.",
+         "physicalLabel": "Physical attack (STR)",
+         "physicalHelp": "Uses your Strength total as the physical damage rating.",
+         "magicalLabel": "Magical attack (INT)",
+         "magicalHelp": "Uses your Intelligence total as the magical damage rating.",
+         "socialLabel": "Social pool (CHA)",
+         "socialHelp": "Uses your Charisma total for persuasion, bargains, and non-combat leverage.",
+         "dexSpeedLabel": "Extra strikes (DEX)",
+         "dexSpeedHelp": "High Dexterity lets you resolve extra attacks before a typical enemy acts once. Tiers at DEX totals 14, 16, and 18.",
+         "raceSkillsTitle": "Racial skill set",
+         "attackSlot1": "Attack 1",
+         "attackSlot2": "Attack 2",
+         "attacksHeading": "Attack skills",
+         "supportHeading": "Support",
+         "itemHeading": "Item / signature move",
+         "outOfCombat": "Out of combat",
+         "raceCardSkills": "Signature skills",
+         "dexTierLabel": "DEX speed tier",
+         "formulasToggle": "Show formula text (for players and LLMs)",
+         "stealthLabel": "Stealth (DEX)",
+         "stealthHelp": "How hard you are to spot when sneaking, tailing someone, or bypassing guards—your Dexterity total is the base, with a small racial knack on some species.",
+         "stealthAffinity": "+{{bonus}} racial knack (Bird-Person / Parasites)",
+         "stealthStatusTitle": "Where the stealth number comes from",
+         "stealthDexLine": "Base from your Dexterity total (after racial bonuses and drawbacks on the sheet): {{dex}}.",
+         "stealthRacialLine": "Racial knack toward staying unseen: +{{bonus}} (Bird-Person and Parasites get +2; everyone else +0).",
+         "stealthRatingLine": "Stealth rating used when the table resolves hiding or moving quietly: {{rating}} (= DEX total + racial knack)."
+      },
       "abilities": {
          "str": "Strength",
          "dex": "Dexterity",
@@ -132,75 +190,228 @@
       "races": {
          "ciancans": {
             "name": "Ciancans",
-            "skill": "Technical Hive Mind (Intelligence)",
             "imageAlt": "Portrait of Prince Nebulon (Zigerion) from the show, used as visual reference for Ciancans.",
             "visualDescription": "Scam-prone hive-minded aliens with green skin, red eyes, and fin-like frills—tech hustle energy.",
-            "secondarySkill": "Deception (Zigerion cons and simulations)",
-            "drawbackDescription": "—"
+            "drawbackDescription": "—",
+            "skills": {
+               "attack1": {
+                  "name": "Hive-Link Haymaker",
+                  "summary": "Coordinate a brutal strike through the hive-mesh; leans on Intelligence reads of the battlefield."
+               },
+               "attack2": {
+                  "name": "Simulation Spike",
+                  "summary": "Overlay a hostile AR burst that staggers foes who buy the fake telemetry."
+               },
+               "support": {
+                  "name": "Consolation Con",
+                  "summary": "Team-wide hustle: reroute blame, buy seconds, or spoof intent while allies reposition."
+               },
+               "item": {
+                  "name": "Pocket holo-suite",
+                  "summary": "Deploys a palm-sized scam projector for misdirection in a fight.",
+                  "outOfCombat": "Forge credentials, preview a room layout, or sell a 'limited-time' deal to NPCs without rolling initiative."
+               }
+            }
          },
          "cronenbergs": {
             "name": "Cronenbergs",
-            "skill": "Mutant Resilience (Strength)",
             "imageAlt": "Portrait of Cronenberg Rick from the show, used as visual reference for Cronenbergs.",
             "visualDescription": "Mutated bodies and exposed organic tissue in red, fleshy tones.",
-            "secondarySkill": "Intimidation (Cronenberg horror presence)",
-            "drawbackDescription": "—"
+            "drawbackDescription": "—",
+            "skills": {
+               "attack1": {
+                  "name": "Bone-Spur Lunge",
+                  "summary": "A messy Strength-forward charge that leaves ichor splatter as cover."
+               },
+               "attack2": {
+                  "name": "Cronenberg Slam",
+                  "summary": "Ground-pound shockwave; good for crowding enemies into each other."
+               },
+               "support": {
+                  "name": "Horror Presence",
+                  "summary": "Intimidate and stall: foes hesitate, giving allies tempo to line up shots."
+               },
+               "item": {
+                  "name": "Mutagen maw",
+                  "summary": "Latch onto a foe to gnaw through armor or grapple tech limbs.",
+                  "outOfCombat": "Chew through rubble, sealed doors, or cable bundles—gross but fast demolition outside fights."
+               }
+            }
          },
          "birdPeople": {
             "name": "Bird-Person",
-            "skill": "Avian Agility (Dexterity)",
             "imageAlt": "Portrait of Birdperson from the show, used as visual reference for Bird-Person.",
             "visualDescription": "Avian humanoids with feathers, beaks, and a nimble silhouette.",
-            "secondarySkill": "Perception (avian senses, aerial awareness) and flight (dexterity)",
-            "drawbackDescription": "—"
+            "drawbackDescription": "—",
+            "skills": {
+               "attack1": {
+                  "name": "Talon Flurry",
+                  "summary": "Two quick Dexterity strikes meant to bleed or strip guard."
+               },
+               "attack2": {
+                  "name": "Dive Spike",
+                  "summary": "Drop from above for piercing damage and knockback."
+               },
+               "support": {
+                  "name": "Thermal Draft",
+                  "summary": "Ride thermals to reposition an ally or clear hazard tiles mid-fight."
+               },
+               "item": {
+                  "name": "Wing-locked glaive",
+                  "summary": "A reach weapon tuned for spinning aerial passes.",
+                  "outOfCombat": "Fly recon: peek over walls, scout roads ahead, or reach ledges and catwalks no ladder can touch."
+               }
+            }
          },
          "chuds": {
             "name": "Chuds",
-            "skill": "Subterranean Survival (Constitution)",
             "imageAlt": "Portrait of CHUD King from the show, used as visual reference for Chuds.",
             "visualDescription": "Subterranean equine humanoids—tough and tied to the underworld.",
-            "secondarySkill": "Intimidation (CHUD royalty and tunnel warfare)",
-            "drawbackDescription": "—"
+            "drawbackDescription": "—",
+            "skills": {
+               "attack1": {
+                  "name": "Tunnel Hoof Drive",
+                  "summary": "A Constitution-fueled stampede that ignores minor pain."
+               },
+               "attack2": {
+                  "name": "Royal Haymaker",
+                  "summary": "Crowd-control punch meant to stagger surface-dwellers."
+               },
+               "support": {
+                  "name": "Underking Rally",
+                  "summary": "Shout orders that grant temp grit to allies holding a chokepoint."
+               },
+               "item": {
+                  "name": "CHUD war pick",
+                  "summary": "Punch through stone plating or vehicle hulls in melee.",
+                  "outOfCombat": "Excavate shortcuts, pry blast doors, or carve climbing holds in tunnel stone."
+               }
+            }
          },
          "cromulons": {
             "name": "Cromulons",
-            "skill": "Show Me What You Got (Performance / Charisma)",
             "imageAlt": "Portrait of Armagheadon (Cromulon) from the show, used as visual reference for Cromulons.",
             "visualDescription": "Giant planet heads with a strong, performative presence.",
-            "secondarySkill": "Intimidation (planetary judgment, 'show me what you got' pressure)",
-            "drawbackDescription": "—"
+            "drawbackDescription": "—",
+            "skills": {
+               "attack1": {
+                  "name": "Headliner Beam",
+                  "summary": "Charisma-charged sonic blast—damage scales with how loud the crowd gets."
+               },
+               "attack2": {
+                  "name": "Judgment Drop",
+                  "summary": "Psychic weight that pins a target in place for an ally finisher."
+               },
+               "support": {
+                  "name": "Applause Shield",
+                  "summary": "Redirect praise into a brief barrier; great for protecting squishy teammates."
+               },
+               "item": {
+                  "name": "Orbital mic-stand",
+                  "summary": "Channel performance energy into melee arcs or ranged 'note' bolts.",
+                  "outOfCombat": "Host impromptu contests to sway crowds, stall guards, or earn safe passage with sheer spectacle."
+               }
+            }
          },
          "parasites": {
             "name": "Parasites",
-            "skill": "False Memory (Deception) — +1 to every ability",
             "imageAlt": "Portrait of Pencilvester (parasite) from the show, used as visual reference for Parasites.",
             "visualDescription": "Shapes that pose as friends until the real threat is revealed.",
-            "secondarySkill": "Stealth (parasite mimicry and infiltration)",
-            "drawbackDescription": "—"
+            "drawbackDescription": "—",
+            "skills": {
+               "attack1": {
+                  "name": "False Friend Shank",
+                  "summary": "Exploit trust for a sudden Dexterity stab from an assumed harmless form."
+               },
+               "attack2": {
+                  "name": "Memory Lash",
+                  "summary": "Intelligence attack that scrambles what the foe thinks they saw last round."
+               },
+               "support": {
+                  "name": "Parasite Chorus",
+                  "summary": "Spawn decoys that soak hits or confuse targeting algorithms."
+               },
+               "item": {
+                  "name": "Pocket parasite bud",
+                  "summary": "Detaches a mini mimic to harass flanks.",
+                  "outOfCombat": "Pose as mundane objects or 'helpful' NPCs to scout houses, offices, or ships without suspicion."
+               }
+            }
          },
          "gearPeople": {
             "name": "Gear People",
-            "skill": "Gear maintenance: bonus when repairing tech and knowledge of the Gear Wars (Intelligence).",
             "imageAlt": "Portrait of Anchor Gear (Gear-Person from Gear World) from the show, visual reference for Gear People.",
             "visualDescription": "Mechanical beings with exposed gears and bronze / metallic tones.",
-            "secondarySkill": "Investigation (Gear World machinery and clockwork lore)",
-            "drawbackDescription": "—"
+            "drawbackDescription": "—",
+            "skills": {
+               "attack1": {
+                  "name": "Geargrind Uppercut",
+                  "summary": "Spun gears add rending damage after a successful Intelligence read on weak points."
+               },
+               "attack2": {
+                  "name": "Clockwork Sweep",
+                  "summary": "Wide arc that jams enemy weapons or loosens armor bolts."
+               },
+               "support": {
+                  "name": "Field Strip",
+                  "summary": "Rapid maintenance: stabilize an ally bot, weapon, or vehicle subsystem."
+               },
+               "item": {
+                  "name": "Gear Wars toolkit",
+                  "summary": "Modular wrenches and torque calipers tuned for battlefield repairs.",
+                  "outOfCombat": "Decode ancient Gear World locks, tune hyperdrive couplings, or jury-rig traps from scrap."
+               }
+            }
          },
          "gromflomites": {
             "name": "Gromflomites",
-            "skill": "Rigid exoskeleton: small passive AC bonus and Galactic Federation military discipline (flavor only; +1 Dexterity, +1 Constitution).",
             "imageAlt": "Portrait of Cornvelious Daniel (Gromflomite) from the show, distinct visual from the Ciancans race.",
             "visualDescription": "Insectoids with multiple eyes, usually in blue Galactic Federation uniforms.",
-            "secondarySkill": "Investigation (Galactic Federation procedure and scrutiny)",
-            "drawbackDescription": "—"
+            "drawbackDescription": "—",
+            "skills": {
+               "attack1": {
+                  "name": "Plasma Carbine Burst",
+                  "summary": "Disciplined three-round burst rewarded when you call shots with Intelligence."
+               },
+               "attack2": {
+                  "name": "Baton Riotline",
+                  "summary": "Close-range suppression meant to lock down hallways."
+               },
+               "support": {
+                  "name": "Formation Drone",
+                  "summary": "Deploy a tiny Fed drone that marks targets and feeds telemetry to the squad."
+               },
+               "item": {
+                  "name": "Fed restraint cuffs",
+                  "summary": "Energy manacles for pinning priority targets mid-fight.",
+                  "outOfCombat": "Process paperwork fast, bluff credentials, or cordon crime scenes while civilians watch."
+               }
+            }
          },
          "humans": {
             "name": "Humans",
-            "skill": "+1 to two attributes of your choice. \"Protagonist's Luck\": once per long rest, reroll one failed ability check.",
             "imageAlt": "Portrait of Morty Smith from the show, human visual reference for Earth (C-137) characters.",
             "visualDescription": "Adaptable beings from Dimension C-137 (or not). Specialists at surviving interdimensional trauma.",
-            "secondarySkill": "—",
-            "drawbackDescription": "—"
+            "drawbackDescription": "—",
+            "skills": {
+               "attack1": {
+                  "name": "Improvised beatdown",
+                  "summary": "Use whatever is nearby—chair, portal gun butt, laser screwdriver—as a flexible Strength strike."
+               },
+               "attack2": {
+                  "name": "Wildcard shot",
+                  "summary": "A desperate ranged attack that can be reflavored as tech or magic depending on your build."
+               },
+               "support": {
+                  "name": "Protagonist's Luck",
+                  "summary": "Once per long rest, force a reroll on a failed check for yourself or an ally you can see."
+               },
+               "item": {
+                  "name": "Omni-slot pack",
+                  "summary": "Humans may attune any mundane or exotic item your table allows without racial item locks.",
+                  "outOfCombat": "Swap loadouts freely: climb kits, translator buds, disguise cases—lean into whatever story beat you need."
+               }
+            }
          }
       }
    }

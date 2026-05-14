@@ -16,6 +16,7 @@ export type RaceId = (typeof RACE_IDS)[number];
 
 export type AbilityScores = Record<AbilityId, number>;
 
+/** Racial definition; localized skills live under `rpg.races.<id>.skills` in i18n. */
 export interface RaceDefinition {
    id: RaceId;
    portraitUrl: string;

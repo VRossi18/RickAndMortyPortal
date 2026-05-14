@@ -1,5 +1,8 @@
 import { describe, expect, it } from 'vitest';
-import { buildCharacterSheetExport } from '../../../components/rpg/buildCharacterSheetExport';
+import {
+   CHARACTER_SHEET_EXPORT_SCHEMA_VERSION,
+   buildCharacterSheetExport,
+} from '../../../components/rpg/buildCharacterSheetExport';
 import {
    computeSpent,
    remainingPoints,
@@ -23,12 +26,30 @@ function mockT(key: string): string {
    if (key === 'rpg.llmInstructions') {
       return 'LLM_HINT';
    }
+   const df = key.match(
+      /^rpg\.derivedFormulas\.(hitPoints|physicalAttack|magicalAttack|socialPool|dexSpeed|stealth)$/,
+   );
+   if (df) {
+      return `FORMULA_${df[1]}`;
+   }
+   if (key === 'rpg.human.playstyleTitle') {
+      return 'HUMAN_PLAY_TITLE';
+   }
+   if (key === 'rpg.human.playstyleSummary') {
+      return 'HUMAN_PLAY_SUMMARY';
+   }
    const m = key.match(/^rpg\.abilities\.(str|dex|con|int|cha)$/);
    if (m) {
       return `ABILITY_${m[1]!.toUpperCase()}`;
    }
+   const skillKey = key.match(
+      /^rpg\.races\.(ciancans|cronenbergs|birdPeople|chuds|cromulons|parasites|gearPeople|gromflomites|humans)\.skills\.(attack1|attack2|support|item)\.(name|summary|outOfCombat)$/,
+   );
+   if (skillKey) {
+      return `SKILL_${skillKey[1]}_${skillKey[2]}_${skillKey[3]}`;
+   }
    const raceMatch = key.match(
-      /^rpg\.races\.(ciancans|cronenbergs|birdPeople|chuds|cromulons|parasites|gearPeople|gromflomites|humans)\.(name|skill|secondarySkill|visualDescription|drawbackDescription)$/,
+      /^rpg\.races\.(ciancans|cronenbergs|birdPeople|chuds|cromulons|parasites|gearPeople|gromflomites|humans)\.(name|visualDescription|drawbackDescription)$/,
    );
    if (raceMatch) {
       return `RACE_${raceMatch[1]}_${raceMatch[2]}`;
@@ -95,7 +116,7 @@ function stateForHumans(
 }
 
 describe('buildCharacterSheetExport', () => {
-   it('exports birdPeople with split racial / drawback maps and abilities', () => {
+   it('exports birdPeople with schema 3, derived stats, race.skills, stealth, and abilities', () => {
       const scores: AbilityScores = { str: 10, dex: 15, con: 10, int: 10, cha: 10 };
       const s = stateForBirdPeople(scores);
       const json = buildCharacterSheetExport(mockT, {
@@ -107,7 +128,7 @@ describe('buildCharacterSheetExport', () => {
       });
 
       expect(json.character.name).toBe('Test Hero');
-      expect(json.meta.schemaVersion).toBe(1);
+      expect(json.meta.schemaVersion).toBe(CHARACTER_SHEET_EXPORT_SCHEMA_VERSION);
       expect(json.meta.exportedAt).toBe('2026-01-01T00:00:00.000Z');
       expect(json.meta.locale).toBe('en');
       expect(json.meta.generator).toBe('test');
@@ -116,6 +137,9 @@ describe('buildCharacterSheetExport', () => {
 
       expect(json.rules.summary).toBe('RULES_SUMMARY');
       expect(json.rules.pointPoolMax).toBe(POINT_POOL_MAX);
+      expect(json.rules.derivedFormulas.hitPoints).toBe('FORMULA_hitPoints');
+      expect(json.rules.derivedFormulas.dexSpeed).toBe('FORMULA_dexSpeed');
+      expect(json.rules.derivedFormulas.stealth).toBe('FORMULA_stealth');
 
       expect(json.pointPool.spent).toBe(s.spent);
       expect(json.pointPool.remaining).toBe(s.remaining);
@@ -124,7 +148,19 @@ describe('buildCharacterSheetExport', () => {
       expect(json.race.id).toBe('birdPeople');
       expect(json.race.racialModifiers).toEqual({ str: 0, dex: 3, con: 0, int: 0, cha: 0 });
       expect(json.race.drawbackModifiers).toEqual({ str: -1, dex: 0, con: -1, int: 0, cha: -1 });
+      expect(json.race.skills.attacks[0]!.id).toBe('attack1');
+      expect(json.race.skills.attacks[0]!.name).toBe('SKILL_birdPeople_attack1_name');
+      expect(json.race.skills.item.outOfCombat).toBe('SKILL_birdPeople_item_outOfCombat');
       expect(json.human).toBeUndefined();
+
+      expect(json.derived.hitPointsMax).toBe(19);
+      expect(json.derived.physicalAttackRating).toBe(9);
+      expect(json.derived.magicalAttackRating).toBe(10);
+      expect(json.derived.socialInfluencePool).toBe(9);
+      expect(json.derived.extraStrikesBeforeEnemy).toBe(3);
+      expect(json.derived.dexSpeedTier).toBe(3);
+      expect(json.derived.stealthRating).toBe(20);
+      expect(json.derived.stealthRacialBonus).toBe(2);
 
       expect(json.abilities).toHaveLength(5);
       const dexRow = json.abilities.find((a) => a.id === 'dex')!;
@@ -142,7 +178,7 @@ describe('buildCharacterSheetExport', () => {
       expect(intRow.d20Modifier).toBe(0);
    });
 
-   it('includes human bonusSlots when race is humans', () => {
+   it('includes human bonusSlots and playstyle when race is humans', () => {
       const scores: AbilityScores = { str: 8, dex: 8, con: 8, int: 8, cha: 8 };
       const s = stateForHumans(scores, ['int', 'cha']);
       const json = buildCharacterSheetExport(mockT, {
@@ -157,10 +193,16 @@ describe('buildCharacterSheetExport', () => {
          { abilityId: 'int', abilityName: 'ABILITY_INT' },
          { abilityId: 'cha', abilityName: 'ABILITY_CHA' },
       ]);
+      expect(json.human?.playstyle).toEqual({
+         title: 'HUMAN_PLAY_TITLE',
+         summary: 'HUMAN_PLAY_SUMMARY',
+      });
       const intRow = json.abilities.find((a) => a.id === 'int')!;
       expect(intRow.racialBonus).toBe(1);
       expect(intRow.total).toBe(9);
       expect(intRow.d20Modifier).toBe(-1);
+      expect(json.derived.stealthRating).toBe(8);
+      expect(json.derived.stealthRacialBonus).toBe(0);
    });
 
    it('orders abilities as ABILITY_IDS', () => {

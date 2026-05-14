@@ -113,6 +113,21 @@
       "raceDrawbackFlavor": "Notas",
       "exportJson": "Exportar JSON",
       "exportJsonAria": "Descarregar ficha em JSON para sessão com LLM ou cópia de segurança",
+      "createCharacter": "Criar personagem",
+      "createCharacterAria": "Abre confirmação para finalizar o personagem e ver a ficha completa",
+      "createBlockedHint": "Gasta os 27 pontos e indica um nome antes de criar.",
+      "createBlockedAria": "Criar personagem (desativado até a ficha estar completa)",
+      "createConfirmTitle": "Criar este personagem?",
+      "createConfirmDescription": "Vais confirmar esta build: raça, nome, point-buy e todos os valores derivados de combate/social. Ainda podes exportar JSON depois no resumo.",
+      "createConfirmBack": "Voltar",
+      "createConfirmYes": "Sim, criar",
+      "createdTitle": "Personagem pronto",
+      "createdSubtitle": "Aqui está a ficha completa — atributos, valores derivados e habilidades raciais.",
+      "createdClose": "Fechar",
+      "createdExportJson": "Exportar JSON",
+      "createdExportJsonAria": "Descarregar este personagem em JSON",
+      "createdStartGame": "Iniciar jogo",
+      "createdStartGameHint": "Em breve — este botão é só visual por agora.",
       "exportBlockedHint": "Gasta os 27 pontos todos antes de poderes exportar.",
       "exportBlockedAria": "Exportar JSON (desativado até gastares todos os pontos)",
       "exportBlockedNameHint": "Indica um nome de personagem antes de poderes exportar.",
@@ -121,7 +136,50 @@
       "exportConfirmDescription": "Será descarregado um ficheiro JSON com o nome, a raça, os atributos e os totais—pronto para colar numa sessão com LLM.",
       "exportConfirmCancel": "Cancelar",
       "exportConfirmDownload": "Descarregar JSON",
-      "llmInstructions": "Trata este JSON como a ficha atual do jogador no estilo Rick and Morty. Usa character.name para te dirigires ao personagem. Usa abilities[].total e abilities[].d20Modifier (floor((total-10)/2)) para resolver testes, salvo se a mesa usar outras regras. Respeita race.drawbackModifiers e os textos narrativos em race. Os limites de point-buy estão em rules e pointPool.",
+      "llmInstructions": "Trata este JSON como a ficha atual do jogador no estilo Rick and Morty (meta.schemaVersion 3). Usa character.name para te dirigires ao personagem. Usa abilities[].total e abilities[].d20Modifier (floor((total-10)/2)) para testes, salvo se a mesa usar outras regras. Usa derived para resumo de combate/social: hitPointsMax, physicalAttackRating (canal Força), magicalAttackRating (canal Inteligência), socialInfluencePool (CHA fora de combate), extraStrikesBeforeEnemy / dexSpeedTier (cadência DEX), stealthRating (DES + stealthRacialBonus para mover-te sem seres visto), stealthRacialBonus (0 ou +2). Usa race.skills (dois ataques, suporte, item com outOfCombat). Para humanos, human.playstyle descreve flexibilidade de itens/builds. rules.derivedFormulas explica as fórmulas em texto. Respeita race.drawbackModifiers e pointPool.",
+      "derivedFormulas": {
+         "hitPoints": "hitPointsMax = 10 + total de Constituição (vitamina / pool de PV).",
+         "physicalAttack": "physicalAttackRating = total de Força (canal de dano físico).",
+         "magicalAttack": "magicalAttackRating = total de Inteligência (canal de dano mágico).",
+         "socialPool": "socialInfluencePool = total de Carisma (conversa e influência fora de combate).",
+         "dexSpeed": "extraStrikesBeforeEnemy pelo total de Destreza: 0 se DEX < 14, 1 para 14–15, 2 para 16–17, 3 se DEX ≥ 18 (golpes extra do jogador antes do primeiro golpe típico do inimigo).",
+         "stealth": "stealthRating = total de Destreza + stealthRacialBonus (0, ou +2 para Pessoas-Pássaro e Parasitas — mover-te sem seres visto, infiltração, seguir alguém)."
+      },
+      "human": {
+         "playstyleTitle": "Base versátil",
+         "playstyleSummary": "Humanos podem empunhar qualquer categoria de item que a mesa permitir e encaixam em vários papéis (corpo a corpo, conjurador, face, escaramuçador). Os +1 raciais são flexíveis — reflavoriza equipamento e manobras à vontade."
+      },
+      "cheatSheet": {
+         "title": "Resumo de combate e social",
+         "description": "Como os totais finais de atributos viram PV, canais de dano, pool de conversa, furtividade (passar sem seres visto) e cadência de ataque com a Destreza. Os valores atualizam quando mudas pontos ou raça.",
+         "hitPointsLabel": "PV máximos",
+         "hitPointsHelp": "Total de Constituição mais 10 — resistência e fôlego.",
+         "physicalLabel": "Ataque físico (FOR)",
+         "physicalHelp": "Usa o total de Força como valor de dano físico.",
+         "magicalLabel": "Ataque mágico (INT)",
+         "magicalHelp": "Usa o total de Inteligência como valor de dano mágico.",
+         "socialLabel": "Pool social (CAR)",
+         "socialHelp": "Usa o total de Carisma para persuasão, barganhas e alavancagem fora de combate.",
+         "dexSpeedLabel": "Golpes extra (DES)",
+         "dexSpeedHelp": "Muita Destreza permite resolver golpes extra antes de um inimigo típico agir uma vez. Degraus nos totais de DEX 14, 16 e 18.",
+         "raceSkillsTitle": "Conjunto de habilidades raciais",
+         "attackSlot1": "Ataque 1",
+         "attackSlot2": "Ataque 2",
+         "attacksHeading": "Habilidades de ataque",
+         "supportHeading": "Suporte",
+         "itemHeading": "Item / assinatura",
+         "outOfCombat": "Fora de combate",
+         "raceCardSkills": "Habilidades de assinatura",
+         "dexTierLabel": "Nível de velocidade (DES)",
+         "formulasToggle": "Mostrar texto das fórmulas (jogadores e LLMs)",
+         "stealthLabel": "Furtividade (DES)",
+         "stealthHelp": "Quão difícil és de detetar ao esgueirar-te, seguir alguém ou passar por guardas — o total de Destreza na ficha é a base, com um pequeno talento racial em algumas espécies.",
+         "stealthAffinity": "+{{bonus}} talento racial (Pessoas-Pássaro / Parasitas)",
+         "stealthStatusTitle": "De onde vem o valor de furtividade",
+         "stealthDexLine": "Base pelo total de Destreza (depois de bônus e desvantagens raciais na ficha): {{dex}}.",
+         "stealthRacialLine": "Talento racial para passar despercebido: +{{bonus}} (Pessoas-Pássaro e Parasitas +2; resto +0).",
+         "stealthRatingLine": "Valor de furtividade para a mesa resolver esconder-se ou mover-se em silêncio: {{rating}} (= total DES + talento racial)."
+      },
       "abilities": {
          "str": "Força",
          "dex": "Destreza",
@@ -132,75 +190,228 @@
       "races": {
          "ciancans": {
             "name": "Ciancãs",
-            "skill": "Mente de Colmeia Técnica (Inteligência)",
             "imageAlt": "Retrato de Prince Nebulon (Zigerion) da série, usado como referência visual para Ciancãs.",
             "visualDescription": "Alienígenas de colmeia e golpes tecnológicos: pele verde, olhos vermelhos e barbatanas — energia de golpe intergaláctico.",
-            "secondarySkill": "Enganação (golpes e simulações Zigerion)",
-            "drawbackDescription": "—"
+            "drawbackDescription": "—",
+            "skills": {
+               "attack1": {
+                  "name": "Murro em liga de colmeia",
+                  "summary": "Coordena um golpe brutal pela rede mental da colmeia; favorece leituras de campo com Inteligência."
+               },
+               "attack2": {
+                  "name": "Pico de simulação",
+                  "summary": "Sobrepõe uma rajada AR hostil que desestabiliza quem acredita na telemetria falsa."
+               },
+               "support": {
+                  "name": "Conforto da fraude",
+                  "summary": "Apoio de equipa: desvia culpas, ganha segundos ou falsifica intenção enquanto aliados reposicionam."
+               },
+               "item": {
+                  "name": "Holosuíte de bolso",
+                  "summary": "Projeta engodos palma-sized para distrair em combate.",
+                  "outOfCombat": "Forja credenciais, pré-visualiza uma sala ou vende uma 'promoção relâmpago' a NPCs sem iniciativa."
+               }
+            }
          },
          "cronenbergs": {
             "name": "Cronenbergs",
-            "skill": "Resiliência Mutante (Força)",
             "imageAlt": "Retrato de Cronenberg Rick da série, usado como referência visual para Cronenbergs.",
             "visualDescription": "Corpos mutantes e carnes expostas em tons avermelhados e orgânicos.",
-            "secondarySkill": "Intimidação (presença de horror Cronenberg)",
-            "drawbackDescription": "—"
+            "drawbackDescription": "—",
+            "skills": {
+               "attack1": {
+                  "name": "Investida de esporão ósseo",
+                  "summary": "Investida focada em Força que deixa borrão de icor como cobertura."
+               },
+               "attack2": {
+                  "name": "Batida Cronenberg",
+                  "summary": "Onda de choque no chão; empurra inimigos uns contra os outros."
+               },
+               "support": {
+                  "name": "Presença de horror",
+                  "summary": "Intimida e retém: inimigos hesitam, dando tempo para aliados alinharem disparos."
+               },
+               "item": {
+                  "name": "Mandíbula mutagénica",
+                  "summary": "Agarra um alvo para roer blindagem ou membros tecnológicos.",
+                  "outOfCombat": "Mastiga escombros, portas seladas ou cabos — demolição rápida e nojenta fora de combate."
+               }
+            }
          },
          "birdPeople": {
             "name": "Pessoas-Pássaro",
-            "skill": "Agilidade Aviária (Destreza)",
             "imageAlt": "Retrato de Birdperson da série, usado como referência visual para Pessoas-Pássaro.",
             "visualDescription": "Humanóides aviários com penas, bicos e silhueta ágil.",
-            "secondarySkill": "Percepção (sentidos aviários, consciência aérea) e voo (destreza)",
-            "drawbackDescription": "—"
+            "drawbackDescription": "—",
+            "skills": {
+               "attack1": {
+                  "name": "Rajada de garras",
+                  "summary": "Dois golpes rápidos de Destreza para sangrar ou quebrar postura."
+               },
+               "attack2": {
+                  "name": "Mergulho perfurante",
+                  "summary": "Queda de cima para dano perfurante e empurrão."
+               },
+               "support": {
+                  "name": "Corrente térmica",
+                  "summary": "Sobe em térmicas para reposicionar um aliado ou limpar hexes perigosos."
+               },
+               "item": {
+                  "name": "Glaive preso à asa",
+                  "summary": "Alcance afinado para rotações aéreas giratórias.",
+                  "outOfCombat": "Reconhecimento aéreo: espreita muros, espião de estrada à frente ou alcança parapeitos sem escada."
+               }
+            }
          },
          "chuds": {
             "name": "Chuds",
-            "skill": "Sobrevivência Subterrânea (Constituição)",
             "imageAlt": "Retrato do CHUD King da série, usado como referência visual para Chuds.",
             "visualDescription": "Humanoides equinos subterrâneos, fortes e ligados ao submundo.",
-            "secondarySkill": "Intimidação (realeza CHUD e guerra nos túneis)",
-            "drawbackDescription": "—"
+            "drawbackDescription": "—",
+            "skills": {
+               "attack1": {
+                  "name": "Corrida de casco em túnel",
+                  "summary": "Estampida alimentada por Constituição que ignora dor menor."
+               },
+               "attack2": {
+                  "name": "Murro real",
+                  "summary": "Soco de controlo de multidão para desestabilizar habitantes da superfície."
+               },
+               "support": {
+                  "name": "Comício do Sub-Rei",
+                  "summary": "Ordens que dão ânimo temporário a aliados num corredor."
+               },
+               "item": {
+                  "name": "Picareta de guerra CHUD",
+                  "summary": "Perfura blindagem de pedra ou cascos de veículo em corpo a corpo.",
+                  "outOfCombat": "Abre atalhos, força portas ou escava pegadas de escalada na rocha."
+               }
+            }
          },
          "cromulons": {
             "name": "Cromulons",
-            "skill": "Show Me What You Got (Performance / Carisma)",
             "imageAlt": "Retrato de Armagheadon (Cromulon) da série, usado como referência visual para Cromulons.",
             "visualDescription": "Cabeças-planeta gigantes e presença cênica intimidante.",
-            "secondarySkill": "Intimidação (julgamento planetário, pressão do 'mostra o que sabes fazer')",
-            "drawbackDescription": "—"
+            "drawbackDescription": "—",
+            "skills": {
+               "attack1": {
+                  "name": "Feixe de cabeça-de-cartaz",
+                  "summary": "Rajada sónica carregada de Carisma — o dano sobe quando a multidão grita."
+               },
+               "attack2": {
+                  "name": "Queda de julgamento",
+                  "summary": "Peso psíquico que prende um alvo no sítio para um remate de aliado."
+               },
+               "support": {
+                  "name": "Escudo de aplausos",
+                  "summary": "Desvia vaidade para uma barreira breve; protege aliados frágeis."
+               },
+               "item": {
+                  "name": "Microfone orbital",
+                  "summary": "Canaliza energia de palco em arcos corpo a corpo ou 'notas' à distância.",
+                  "outOfCombat": "Anima concursos improvisados para convencer multidões, atrasar guardas ou ganhar passagem segura."
+               }
+            }
          },
          "parasites": {
             "name": "Parasitas",
-            "skill": "Memória Falsa (Enganação) — +1 em todos os atributos",
             "imageAlt": "Retrato de Pencilvester (parasita) da série, usado como referência visual para Parasitas.",
             "visualDescription": "Formas disfarçadas de amigos até revelarem a verdadeira ameaça.",
-            "secondarySkill": "Furtividade (mimetismo e infiltração de parasita)",
-            "drawbackDescription": "—"
+            "drawbackDescription": "—",
+            "skills": {
+               "attack1": {
+                  "name": "Facada de falso amigo",
+                  "summary": "Explora confiança para um golpe súbito de Destreza a partir de uma forma inofensiva."
+               },
+               "attack2": {
+                  "name": "Chicote de memória",
+                  "summary": "Ataque de Inteligência que embaralha o que o inimigo julga ter visto na ronda anterior."
+               },
+               "support": {
+                  "name": "Coro de parasitas",
+                  "summary": "Gera iscos que absorvem golpes ou confundem algoritmos de mira."
+               },
+               "item": {
+                  "name": "Broto parasita de bolso",
+                  "summary": "Soltas um mini-mímico para hostilizar flancos.",
+                  "outOfCombat": "Disfarça-te de objeto banal ou NPC 'prestativo' para espiar casas, escritórios ou naves sem suspeitas."
+               }
+            }
          },
          "gearPeople": {
             "name": "Gear People",
-            "skill": "Manutenção de Engrenagens: bônus em reparar tecnologias e conhecimento sobre a Guerra das Engrenagens (Inteligência).",
             "imageAlt": "Retrato de Anchor Gear (Gear-Person do Mundo das Engrenagens) da série, referência visual para Gear People.",
             "visualDescription": "Seres mecânicos com engrenagens expostas e tons bronze / metálico.",
-            "secondarySkill": "Investigação (mecanismos de Gear World e lore das engrenagens)",
-            "drawbackDescription": "—"
+            "drawbackDescription": "—",
+            "skills": {
+               "attack1": {
+                  "name": "Uppercut de moagem",
+                  "summary": "Engrenagens giradas somam dano de rasgo depois de uma leitura de pontos fracos com Inteligência."
+               },
+               "attack2": {
+                  "name": "Varredura de relógio",
+                  "summary": "Arco largo que emperra armas ou solta parafusos de armaduras."
+               },
+               "support": {
+                  "name": "Desmontagem de campo",
+                  "summary": "Manutenção rápida: estabiliza bot, arma ou subsistema de veículo aliado."
+               },
+               "item": {
+                  "name": "Kit da Guerra das Engrenagens",
+                  "summary": "Chaves modulares e calibradores de torque para reparos em combate.",
+                  "outOfCombat": "Decifra fechaduras de Gear World, afina acoplamentos de hiperdrive ou arma armadilhas com sucata."
+               }
+            }
          },
          "gromflomites": {
             "name": "Gromflomites",
-            "skill": "Exoesqueleto rígido: pequeno bônus passivo de CA e disciplina militar da Federação Galáctica (apenas narrativo; +1 Destreza, +1 Constituição).",
             "imageAlt": "Retrato de Cornvelious Daniel (Gromflomite) da série, referência visual distinta da raça Ciancãs.",
             "visualDescription": "Insetoides com vários olhos, geralmente em uniformes azuis da Federação Galáctica.",
-            "secondarySkill": "Investigação (procedimentos da Federação Galáctica e escrutínio)",
-            "drawbackDescription": "—"
+            "drawbackDescription": "—",
+            "skills": {
+               "attack1": {
+                  "name": "Rajada de carabina de plasma",
+                  "summary": "Rajada disciplinada de três tiros quando marcas alvos com Inteligência."
+               },
+               "attack2": {
+                  "name": "Linha de cassetete",
+                  "summary": "Supressão à queima-roupa para bloquear corredores."
+               },
+               "support": {
+                  "name": "Drone de formação",
+                  "summary": "Drone minúsculo da Fed que marca alvos e envia telemetria à equipa."
+               },
+               "item": {
+                  "name": "Algemas de contenção Fed",
+                  "summary": "Manilhas de energia para imobilizar alvos prioritários.",
+                  "outOfCombat": "Processa papelada depressa, blefa credenciais ou isola cenas enquanto civis observam."
+               }
+            }
          },
          "humans": {
             "name": "Humanos",
-            "skill": "+1 em dois atributos à escolha. \"Sorte do Protagonista\": uma vez por descanso longo, pode refazer um teste de atributo que falhou.",
             "imageAlt": "Retrato de Morty Smith da série, referência visual humana para personagens da Terra (C-137).",
             "visualDescription": "Seres adaptáveis da Dimensão C-137 (ou não). Especialistas em sobreviver a traumas interdimensionais.",
-            "secondarySkill": "—",
-            "drawbackDescription": "—"
+            "drawbackDescription": "—",
+            "skills": {
+               "attack1": {
+                  "name": "Surra improvisada",
+                  "summary": "Usa o que estiver por perto — cadeira, coronha da pistola de portais — como golpe flexível de Força."
+               },
+               "attack2": {
+                  "name": "Tiro à sorte",
+                  "summary": "Ataque à distância desesperado; reflavoriza como tech ou magia conforme o teu build."
+               },
+               "support": {
+                  "name": "Sorte do protagonista",
+                  "summary": "Uma vez por descanso longo, força um novo teste num falhanço teu ou de um aliado que vejas."
+               },
+               "item": {
+                  "name": "Mochila omni-slot",
+                  "summary": "Humanos harmonizam qualquer item mundano ou exótico que a mesa permita, sem travas raciais de equipamento.",
+                  "outOfCombat": "Troca kits à vontade: escalada, tradutor, disfarces — adapta ao próximo beat da história."
+               }
+            }
          }
       }
    }

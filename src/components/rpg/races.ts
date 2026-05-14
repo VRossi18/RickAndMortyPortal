@@ -77,7 +77,6 @@ export function defaultRaceId(): RaceId {
    return RACES[0]!.id;
 }
 
-/** Racial bonus per ability (0 if none). */
 export function racialBonusMap(race: RaceDefinition | null): Record<AbilityId, number> {
    const base: Record<AbilityId, number> = { str: 0, dex: 0, con: 0, int: 0, cha: 0 };
    if (!race) {
@@ -92,7 +91,6 @@ export function racialBonusMap(race: RaceDefinition | null): Record<AbilityId, n
    return base;
 }
 
-/** Drawback penalties per ability (0 if none). */
 export function drawbackModifierMap(race: RaceDefinition | null): Record<AbilityId, number> {
    const base: Record<AbilityId, number> = { str: 0, dex: 0, con: 0, int: 0, cha: 0 };
    if (!race?.drawbackModifiers) {
@@ -107,7 +105,6 @@ export function drawbackModifierMap(race: RaceDefinition | null): Record<Ability
    return base;
 }
 
-/** Sum two per-ability deltas (racial bonuses + drawbacks + other adjustments). */
 export function mergeAbilityDeltas(
    a: Record<AbilityId, number>,
    b: Record<AbilityId, number>,
