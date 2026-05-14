@@ -44,7 +44,7 @@ jobs:
          - name: Write RPG character export sample (CI fixture)
            run: pnpm run rpg:write-export-sample
          - name: Upload RPG character export sample
-           uses: actions/upload-artifact@v5
+           uses: actions/upload-artifact@v6
            with:
               name: rpg-character-export-sample
               path: artifacts/rpg-character-export.sample.json
