@@ -122,24 +122,24 @@ describe('buildCharacterSheetExport', () => {
       expect(json.pointPool.max).toBe(POINT_POOL_MAX);
 
       expect(json.race.id).toBe('birdPeople');
-      expect(json.race.racialModifiers).toEqual({ str: 0, dex: 2, con: 0, int: 0, cha: 0 });
-      expect(json.race.drawbackModifiers).toEqual({ str: 0, dex: 0, con: -1, int: -1, cha: 0 });
+      expect(json.race.racialModifiers).toEqual({ str: 0, dex: 3, con: 0, int: 0, cha: 0 });
+      expect(json.race.drawbackModifiers).toEqual({ str: -1, dex: 0, con: -1, int: 0, cha: -1 });
       expect(json.human).toBeUndefined();
 
       expect(json.abilities).toHaveLength(5);
       const dexRow = json.abilities.find((a) => a.id === 'dex')!;
       expect(dexRow.base).toBe(15);
-      expect(dexRow.racialBonus).toBe(2);
+      expect(dexRow.racialBonus).toBe(3);
       expect(dexRow.drawback).toBe(0);
-      expect(dexRow.total).toBe(17);
-      expect(dexRow.d20Modifier).toBe(3);
-      expect(dexRow.highTotalWarning).toBe(false);
+      expect(dexRow.total).toBe(18);
+      expect(dexRow.d20Modifier).toBe(4);
+      expect(dexRow.highTotalWarning).toBe(true);
 
       const intRow = json.abilities.find((a) => a.id === 'int')!;
       expect(intRow.racialBonus).toBe(0);
-      expect(intRow.drawback).toBe(-1);
-      expect(intRow.total).toBe(9);
-      expect(intRow.d20Modifier).toBe(-1);
+      expect(intRow.drawback).toBe(0);
+      expect(intRow.total).toBe(10);
+      expect(intRow.d20Modifier).toBe(0);
    });
 
    it('includes human bonusSlots when race is humans', () => {

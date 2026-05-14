@@ -27,7 +27,7 @@ describe('characterCreationMath', () => {
    it('computeTotals adds racial bonuses', () => {
       const scores = { ...defaultScores(), str: 12 };
       const bonus = racialBonusMap(getRaceById('cronenbergs'));
-      expect(computeTotals(scores, bonus).str).toBe(14);
+      expect(computeTotals(scores, bonus).str).toBe(15);
    });
 
    it('computeTotals supports negative per-ability deltas (drawbacks)', () => {

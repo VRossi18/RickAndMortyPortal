@@ -95,7 +95,7 @@ describe('useCharacterCreation', () => {
          result.current.incrementAbility('str');
       });
       expect(result.current.scores.str).toBe(10);
-      expect(result.current.totals.str).toBe(12);
+      expect(result.current.totals.str).toBe(13);
       act(() => {
          result.current.setRace('ciancans');
       });
