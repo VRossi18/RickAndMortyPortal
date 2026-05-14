@@ -8,15 +8,12 @@ import {
 import { ABILITY_IDS } from './types';
 import type { AbilityId, AbilityScores, RaceDefinition, RaceId } from './types';
 
-/** Minimal translator: same keys as `useTranslation('common').t` for RPG export. */
 export type CharacterSheetExportTranslate = (key: string) => string;
 
 export interface CharacterSheetExportInput {
    exportedAt: string;
    locale: string;
-   /** Player-chosen character name (trimmed for export). */
    characterName: string;
-   /** e.g. `github-actions-fixture` in CI; omit or set for UI exports */
    generator?: string;
    schemaVersion?: number;
    selectedRaceId: RaceId;
@@ -122,10 +119,6 @@ function d20Modifier(total: number): number {
    return Math.floor((total - 10) / 2);
 }
 
-/**
- * Builds a versioned JSON-serializable character sheet for LLM / tooling.
- * Caller supplies the same derived fields as `useCharacterCreation` (scores, sheet columns, totals, pool).
- */
 export function buildCharacterSheetExport(
    t: CharacterSheetExportTranslate,
    input: CharacterSheetExportInput,

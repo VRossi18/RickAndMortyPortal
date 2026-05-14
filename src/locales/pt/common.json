@@ -108,6 +108,9 @@
       "humanBonusSlot2": "Segundo atributo com +1",
       "raceSecondarySkill": "Segunda habilidade racial",
       "raceDrawback": "Desvantagem",
+      "raceDrawbackMechanical": "Penalidades nos atributos (ficha)",
+      "raceDrawbackNone": "Nenhuma para esta raça.",
+      "raceDrawbackFlavor": "Notas",
       "exportJson": "Exportar JSON",
       "exportJsonAria": "Descarregar ficha em JSON para sessão com LLM ou cópia de segurança",
       "exportBlockedHint": "Gasta os 27 pontos todos antes de poderes exportar.",
@@ -132,7 +135,7 @@
             "skill": "Mente de Colmeia Técnica (Inteligência)",
             "imageAlt": "Retrato de Prince Nebulon (Zigerion) da série, usado como referência visual para Ciancãs.",
             "visualDescription": "Alienígenas de colmeia e golpes tecnológicos: pele verde, olhos vermelhos e barbatanas — energia de golpe intergaláctico.",
-            "secondarySkill": "—",
+            "secondarySkill": "Enganação (golpes e simulações Zigerion)",
             "drawbackDescription": "—"
          },
          "cronenbergs": {
@@ -140,7 +143,7 @@
             "skill": "Resiliência Mutante (Força)",
             "imageAlt": "Retrato de Cronenberg Rick da série, usado como referência visual para Cronenbergs.",
             "visualDescription": "Corpos mutantes e carnes expostas em tons avermelhados e orgânicos.",
-            "secondarySkill": "—",
+            "secondarySkill": "Intimidação (presença de horror Cronenberg)",
             "drawbackDescription": "—"
          },
          "birdPeople": {
@@ -148,7 +151,7 @@
             "skill": "Agilidade Aviária (Destreza)",
             "imageAlt": "Retrato de Birdperson da série, usado como referência visual para Pessoas-Pássaro.",
             "visualDescription": "Humanóides aviários com penas, bicos e silhueta ágil.",
-            "secondarySkill": "—",
+            "secondarySkill": "Percepção (sentidos aviários, consciência aérea) e voo (destreza)",
             "drawbackDescription": "—"
          },
          "chuds": {
@@ -156,7 +159,7 @@
             "skill": "Sobrevivência Subterrânea (Constituição)",
             "imageAlt": "Retrato do CHUD King da série, usado como referência visual para Chuds.",
             "visualDescription": "Humanoides equinos subterrâneos, fortes e ligados ao submundo.",
-            "secondarySkill": "—",
+            "secondarySkill": "Intimidação (realeza CHUD e guerra nos túneis)",
             "drawbackDescription": "—"
          },
          "cromulons": {
@@ -164,7 +167,7 @@
             "skill": "Show Me What You Got (Performance / Carisma)",
             "imageAlt": "Retrato de Armagheadon (Cromulon) da série, usado como referência visual para Cromulons.",
             "visualDescription": "Cabeças-planeta gigantes e presença cênica intimidante.",
-            "secondarySkill": "—",
+            "secondarySkill": "Intimidação (julgamento planetário, pressão do 'mostra o que sabes fazer')",
             "drawbackDescription": "—"
          },
          "parasites": {
@@ -172,7 +175,7 @@
             "skill": "Memória Falsa (Enganação) — +1 em todos os atributos",
             "imageAlt": "Retrato de Pencilvester (parasita) da série, usado como referência visual para Parasitas.",
             "visualDescription": "Formas disfarçadas de amigos até revelarem a verdadeira ameaça.",
-            "secondarySkill": "—",
+            "secondarySkill": "Furtividade (mimetismo e infiltração de parasita)",
             "drawbackDescription": "—"
          },
          "gearPeople": {
@@ -180,7 +183,7 @@
             "skill": "Manutenção de Engrenagens: bônus em reparar tecnologias e conhecimento sobre a Guerra das Engrenagens (Inteligência).",
             "imageAlt": "Retrato de Anchor Gear (Gear-Person do Mundo das Engrenagens) da série, referência visual para Gear People.",
             "visualDescription": "Seres mecânicos com engrenagens expostas e tons bronze / metálico.",
-            "secondarySkill": "—",
+            "secondarySkill": "Investigação (mecanismos de Gear World e lore das engrenagens)",
             "drawbackDescription": "—"
          },
          "gromflomites": {
@@ -188,7 +191,7 @@
             "skill": "Exoesqueleto rígido: pequeno bônus passivo de CA e disciplina militar da Federação Galáctica (apenas narrativo; +1 Destreza, +1 Constituição).",
             "imageAlt": "Retrato de Cornvelious Daniel (Gromflomite) da série, referência visual distinta da raça Ciancãs.",
             "visualDescription": "Insetoides com vários olhos, geralmente em uniformes azuis da Federação Galáctica.",
-            "secondarySkill": "—",
+            "secondarySkill": "Investigação (procedimentos da Federação Galáctica e escrutínio)",
             "drawbackDescription": "—"
          },
          "humans": {

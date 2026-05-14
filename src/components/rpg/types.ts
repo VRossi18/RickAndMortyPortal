@@ -18,11 +18,8 @@ export type AbilityScores = Record<AbilityId, number>;
 
 export interface RaceDefinition {
    id: RaceId;
-   /** Official character portrait from the Rick and Morty API (stable CDN URL). */
    portraitUrl: string;
-   /** Gradient fallback when the portrait URL fails to load (Tailwind, static for purge). */
    cardClass: string;
    modifiers: Partial<Record<AbilityId, number>>;
-   /** Negative ability deltas (e.g. -1 CON). Omitted when the race has no numeric drawback. */
    drawbackModifiers?: Partial<Record<AbilityId, number>>;
 }

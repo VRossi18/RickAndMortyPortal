@@ -16,6 +16,21 @@ function formatBonus(n: number): string {
    return n > 0 ? `+${n}` : String(n);
 }
 
+/** Non-empty localized lines for each ability with a negative drawback on the sheet. */
+function mechanicalDrawbackParts(
+   sheetDrawback: Record<AbilityId, number>,
+   translate: (key: string) => string,
+): string[] {
+   const parts: string[] = [];
+   for (const id of ABILITY_IDS) {
+      const v = sheetDrawback[id];
+      if (v < 0) {
+         parts.push(`${translate(`rpg.abilities.${id}` as 'rpg.title')} ${formatBonus(v)}`);
+      }
+   }
+   return parts;
+}
+
 function RacePortrait({
    race,
    imageAlt,
@@ -93,14 +108,19 @@ export function CharacterSheetContainer() {
    const nameTrimmed = characterName.trim();
    const previewName = t(`rpg.races.${selectedRace.id}.name` as 'rpg.title');
    const previewSkill = t(`rpg.races.${selectedRace.id}.skill` as 'rpg.title');
-   const previewSecondarySkill = t(
-      `rpg.races.${selectedRace.id}.secondarySkill` as 'rpg.title',
-   );
+   const previewSecondarySkill = t(`rpg.races.${selectedRace.id}.secondarySkill` as 'rpg.title');
    const previewAlt = t(`rpg.races.${selectedRace.id}.imageAlt` as 'rpg.title');
    const previewVisual = t(`rpg.races.${selectedRace.id}.visualDescription` as 'rpg.title');
-   const previewDrawback = t(
-      `rpg.races.${selectedRace.id}.drawbackDescription` as 'rpg.title',
+   const previewDrawback = t(`rpg.races.${selectedRace.id}.drawbackDescription` as 'rpg.title');
+
+   const mechanicalDrawbackLines = mechanicalDrawbackParts(sheetDrawback, (key) =>
+      t(key as 'rpg.title'),
    );
+   const drawbackFlavorTrimmed = previewDrawback
+      .replace(/[\u2014\u2013-]/g, '')
+      .replace(/\s/g, '')
+      .trim();
+   const hasFlavorDrawback = previewDrawback.length > 0 && drawbackFlavorTrimmed.length > 0;
 
    const canExportJson = remaining === 0 && nameTrimmed.length > 0;
 
@@ -156,14 +176,13 @@ export function CharacterSheetContainer() {
       remaining > 0
          ? t('rpg.exportBlockedHint')
          : nameTrimmed.length === 0
-            ? t('rpg.exportBlockedNameHint')
-            : undefined;
-   const exportButtonAriaLabel =
-      canExportJson
-         ? t('rpg.exportJsonAria')
-         : remaining > 0
-            ? t('rpg.exportBlockedAria')
-            : t('rpg.exportBlockedNameAria');
+           ? t('rpg.exportBlockedNameHint')
+           : undefined;
+   const exportButtonAriaLabel = canExportJson
+      ? t('rpg.exportJsonAria')
+      : remaining > 0
+        ? t('rpg.exportBlockedAria')
+        : t('rpg.exportBlockedNameAria');
 
    const closeExportConfirmDialog = useCallback(() => {
       exportDialogRef.current?.close();
@@ -238,7 +257,7 @@ export function CharacterSheetContainer() {
 
          <dialog
             ref={exportDialogRef}
-            className="w-[min(100%,24rem)] max-w-[calc(100vw-2rem)] rounded-2xl border border-border bg-card p-6 text-foreground shadow-2xl backdrop:bg-black/55"
+            className="fixed left-1/2 top-1/2 z-50 m-0 max-h-[min(90vh,32rem)] w-[min(100%,24rem)] max-w-[calc(100vw-2rem)] -translate-x-1/2 -translate-y-1/2 overflow-y-auto rounded-2xl border border-border bg-card p-6 text-foreground shadow-2xl backdrop:bg-black/55"
             aria-labelledby={exportDialogTitleId}
             aria-describedby={exportDialogDescId}
          >
@@ -341,7 +360,9 @@ export function CharacterSheetContainer() {
                   </p>
                   {nameTrimmed ? (
                      <>
-                        <p className="mt-1 text-2xl font-black tracking-tight text-primary">{nameTrimmed}</p>
+                        <p className="mt-1 text-2xl font-black tracking-tight text-primary">
+                           {nameTrimmed}
+                        </p>
                         <p className="mt-1 text-lg font-bold text-foreground">
                            <span className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
                               {t('rpg.raceHeading')}{' '}
@@ -367,12 +388,24 @@ export function CharacterSheetContainer() {
                   <p className="mt-2 text-xs leading-relaxed text-muted-foreground">
                      {previewVisual}
                   </p>
-                  <p className="mt-2 text-xs leading-relaxed text-amber-800/95 dark:text-amber-200/90">
-                     <span className="font-semibold text-foreground/85">
-                        {t('rpg.raceDrawback')}:{' '}
-                     </span>
-                     {previewDrawback}
-                  </p>
+                  <div className="mt-2 space-y-1.5 rounded-lg border border-amber-500/25 bg-amber-500/5 px-3 py-2.5 text-left text-amber-950 dark:border-amber-400/20 dark:bg-amber-400/10 dark:text-amber-100">
+                     <p className="text-xs font-bold uppercase tracking-wide text-amber-900/90 dark:text-amber-200/95">
+                        {t('rpg.raceDrawbackMechanical')}
+                     </p>
+                     <p className="text-sm font-mono font-semibold leading-relaxed text-amber-900 dark:text-amber-50">
+                        {mechanicalDrawbackLines.length > 0
+                           ? mechanicalDrawbackLines.join(' · ')
+                           : t('rpg.raceDrawbackNone')}
+                     </p>
+                     {hasFlavorDrawback ? (
+                        <p className="text-xs leading-relaxed text-amber-900/85 dark:text-amber-100/90">
+                           <span className="font-semibold text-foreground/90">
+                              {t('rpg.raceDrawbackFlavor')}:{' '}
+                           </span>
+                           {previewDrawback}
+                        </p>
+                     ) : null}
+                  </div>
                </div>
             </div>
          </section>

@@ -108,6 +108,9 @@
       "humanBonusSlot2": "Second +1 attribute",
       "raceSecondarySkill": "Second racial skill",
       "raceDrawback": "Drawback",
+      "raceDrawbackMechanical": "Ability penalties (sheet)",
+      "raceDrawbackNone": "None for this race.",
+      "raceDrawbackFlavor": "Notes",
       "exportJson": "Export JSON",
       "exportJsonAria": "Download character sheet as JSON for an LLM session or backup",
       "exportBlockedHint": "Spend all 27 points before you can export.",
@@ -132,7 +135,7 @@
             "skill": "Technical Hive Mind (Intelligence)",
             "imageAlt": "Portrait of Prince Nebulon (Zigerion) from the show, used as visual reference for Ciancans.",
             "visualDescription": "Scam-prone hive-minded aliens with green skin, red eyes, and fin-like frills—tech hustle energy.",
-            "secondarySkill": "—",
+            "secondarySkill": "Deception (Zigerion cons and simulations)",
             "drawbackDescription": "—"
          },
          "cronenbergs": {
@@ -140,7 +143,7 @@
             "skill": "Mutant Resilience (Strength)",
             "imageAlt": "Portrait of Cronenberg Rick from the show, used as visual reference for Cronenbergs.",
             "visualDescription": "Mutated bodies and exposed organic tissue in red, fleshy tones.",
-            "secondarySkill": "—",
+            "secondarySkill": "Intimidation (Cronenberg horror presence)",
             "drawbackDescription": "—"
          },
          "birdPeople": {
@@ -148,7 +151,7 @@
             "skill": "Avian Agility (Dexterity)",
             "imageAlt": "Portrait of Birdperson from the show, used as visual reference for Bird-Person.",
             "visualDescription": "Avian humanoids with feathers, beaks, and a nimble silhouette.",
-            "secondarySkill": "—",
+            "secondarySkill": "Perception (avian senses, aerial awareness) and flight (dexterity)",
             "drawbackDescription": "—"
          },
          "chuds": {
@@ -156,7 +159,7 @@
             "skill": "Subterranean Survival (Constitution)",
             "imageAlt": "Portrait of CHUD King from the show, used as visual reference for Chuds.",
             "visualDescription": "Subterranean equine humanoids—tough and tied to the underworld.",
-            "secondarySkill": "—",
+            "secondarySkill": "Intimidation (CHUD royalty and tunnel warfare)",
             "drawbackDescription": "—"
          },
          "cromulons": {
@@ -164,7 +167,7 @@
             "skill": "Show Me What You Got (Performance / Charisma)",
             "imageAlt": "Portrait of Armagheadon (Cromulon) from the show, used as visual reference for Cromulons.",
             "visualDescription": "Giant planet heads with a strong, performative presence.",
-            "secondarySkill": "—",
+            "secondarySkill": "Intimidation (planetary judgment, 'show me what you got' pressure)",
             "drawbackDescription": "—"
          },
          "parasites": {
@@ -172,7 +175,7 @@
             "skill": "False Memory (Deception) — +1 to every ability",
             "imageAlt": "Portrait of Pencilvester (parasite) from the show, used as visual reference for Parasites.",
             "visualDescription": "Shapes that pose as friends until the real threat is revealed.",
-            "secondarySkill": "—",
+            "secondarySkill": "Stealth (parasite mimicry and infiltration)",
             "drawbackDescription": "—"
          },
          "gearPeople": {
@@ -180,7 +183,7 @@
             "skill": "Gear maintenance: bonus when repairing tech and knowledge of the Gear Wars (Intelligence).",
             "imageAlt": "Portrait of Anchor Gear (Gear-Person from Gear World) from the show, visual reference for Gear People.",
             "visualDescription": "Mechanical beings with exposed gears and bronze / metallic tones.",
-            "secondarySkill": "—",
+            "secondarySkill": "Investigation (Gear World machinery and clockwork lore)",
             "drawbackDescription": "—"
          },
          "gromflomites": {
@@ -188,7 +191,7 @@
             "skill": "Rigid exoskeleton: small passive AC bonus and Galactic Federation military discipline (flavor only; +1 Dexterity, +1 Constitution).",
             "imageAlt": "Portrait of Cornvelious Daniel (Gromflomite) from the show, distinct visual from the Ciancans race.",
             "visualDescription": "Insectoids with multiple eyes, usually in blue Galactic Federation uniforms.",
-            "secondarySkill": "—",
+            "secondarySkill": "Investigation (Galactic Federation procedure and scrutiny)",
             "drawbackDescription": "—"
          },
          "humans": {
