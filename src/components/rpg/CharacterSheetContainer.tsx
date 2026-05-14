@@ -90,11 +90,19 @@ function downloadJsonFile(filename: string, data: unknown) {
    URL.revokeObjectURL(url);
 }
 
-function raceSkillName(t: (key: string) => string, raceId: RaceId, slot: 'attack1' | 'attack2' | 'support' | 'item'): string {
+function raceSkillName(
+   t: (key: string) => string,
+   raceId: RaceId,
+   slot: 'attack1' | 'attack2' | 'support' | 'item',
+): string {
    return t(`rpg.races.${raceId}.skills.${slot}.name` as 'rpg.title');
 }
 
-function raceSkillSummary(t: (key: string) => string, raceId: RaceId, slot: 'attack1' | 'attack2' | 'support' | 'item'): string {
+function raceSkillSummary(
+   t: (key: string) => string,
+   raceId: RaceId,
+   slot: 'attack1' | 'attack2' | 'support' | 'item',
+): string {
    return t(`rpg.races.${raceId}.skills.${slot}.summary` as 'rpg.title');
 }
 
@@ -143,7 +151,10 @@ export function CharacterSheetContainer() {
    const previewAlt = t(`rpg.races.${selectedRace.id}.imageAlt` as 'rpg.title');
    const previewVisual = t(`rpg.races.${selectedRace.id}.visualDescription` as 'rpg.title');
    const previewDrawback = t(`rpg.races.${selectedRace.id}.drawbackDescription` as 'rpg.title');
-   const derived = useMemo(() => buildDerivedSheet(totals, selectedRaceId), [totals, selectedRaceId]);
+   const derived = useMemo(
+      () => buildDerivedSheet(totals, selectedRaceId),
+      [totals, selectedRaceId],
+   );
    const summaryDerived = useMemo(
       () =>
          creationSnapshot
@@ -401,7 +412,6 @@ export function CharacterSheetContainer() {
                   aria-label={t('rpg.characterNameLabel')}
                />
             </label>
-            <p className="mt-2 text-xs text-muted-foreground">{t('rpg.characterNameHint')}</p>
          </section>
 
          <dialog
@@ -508,7 +518,7 @@ export function CharacterSheetContainer() {
                            <p className="text-base font-bold text-foreground">{name}</p>
                            <p className="text-xs text-muted-foreground">
                               <span className="font-semibold text-foreground/80">
-                                 {t('rpg.cheatSheet.raceCardSkills' as 'rpg.title')}:{' '}
+                                 {t('rpg.raceCardSkills')}:{' '}
                               </span>
                               <span className="line-clamp-2">
                                  {a1} · {a2} · {su}
@@ -559,25 +569,36 @@ export function CharacterSheetContainer() {
                      <p className="mt-1 text-2xl font-black text-foreground">{previewName}</p>
                   )}
                   <div className="mt-3 space-y-2 text-left text-sm text-muted-foreground">
-                     <p className="font-semibold text-foreground/90">{t('rpg.cheatSheet.raceSkillsTitle')}</p>
+                     <p className="font-semibold text-foreground/90">
+                        {t('rpg.cheatSheet.raceSkillsTitle')}
+                     </p>
                      <ul className="list-inside list-disc space-y-1.5 text-xs leading-relaxed">
                         <li>
-                           <span className="font-semibold text-foreground/85">{t('rpg.cheatSheet.attacksHeading')}: </span>
-                           {raceSkillName(t, selectedRace.id, 'attack1')} — {raceSkillName(t, selectedRace.id, 'attack2')}
+                           <span className="font-semibold text-foreground/85">
+                              {t('rpg.cheatSheet.attacksHeading')}:{' '}
+                           </span>
+                           {raceSkillName(t, selectedRace.id, 'attack1')} —{' '}
+                           {raceSkillName(t, selectedRace.id, 'attack2')}
                         </li>
                         <li>
-                           <span className="font-semibold text-foreground/85">{t('rpg.cheatSheet.supportHeading')}: </span>
+                           <span className="font-semibold text-foreground/85">
+                              {t('rpg.cheatSheet.supportHeading')}:{' '}
+                           </span>
                            {raceSkillName(t, selectedRace.id, 'support')}
                         </li>
                         <li>
-                           <span className="font-semibold text-foreground/85">{t('rpg.cheatSheet.itemHeading')}: </span>
+                           <span className="font-semibold text-foreground/85">
+                              {t('rpg.cheatSheet.itemHeading')}:{' '}
+                           </span>
                            {raceSkillName(t, selectedRace.id, 'item')}
                         </li>
                      </ul>
                   </div>
                   {selectedRaceId === 'humans' ? (
                      <p className="mt-2 rounded-lg border border-primary/20 bg-primary/5 px-3 py-2 text-xs leading-relaxed text-foreground/90">
-                        <span className="font-bold text-primary">{t('rpg.human.playstyleTitle')}: </span>
+                        <span className="font-bold text-primary">
+                           {t('rpg.human.playstyleTitle')}:{' '}
+                        </span>
                         {t('rpg.human.playstyleSummary')}
                      </p>
                   ) : null}
@@ -658,14 +679,20 @@ export function CharacterSheetContainer() {
             <p className="mt-1 text-xs text-muted-foreground">{t('rpg.cheatSheet.description')}</p>
             <dl className="mt-4 space-y-4 text-sm">
                <div className="rounded-lg border border-border/60 bg-background/40 px-3 py-2.5">
-                  <dt className="font-semibold text-foreground">{t('rpg.cheatSheet.hitPointsLabel')}</dt>
-                  <dd className="mt-0.5 font-mono text-base font-bold text-primary">{derived.hitPointsMax}</dd>
+                  <dt className="font-semibold text-foreground">
+                     {t('rpg.cheatSheet.hitPointsLabel')}
+                  </dt>
+                  <dd className="mt-0.5 font-mono text-base font-bold text-primary">
+                     {derived.hitPointsMax}
+                  </dd>
                   <dd className="mt-1 text-xs leading-relaxed text-muted-foreground">
                      {t('rpg.cheatSheet.hitPointsHelp')}
                   </dd>
                </div>
                <div className="rounded-lg border border-border/60 bg-background/40 px-3 py-2.5">
-                  <dt className="font-semibold text-foreground">{t('rpg.cheatSheet.physicalLabel')}</dt>
+                  <dt className="font-semibold text-foreground">
+                     {t('rpg.cheatSheet.physicalLabel')}
+                  </dt>
                   <dd className="mt-0.5 font-mono text-base font-bold text-primary">
                      {derived.physicalAttackRating}
                   </dd>
@@ -674,7 +701,9 @@ export function CharacterSheetContainer() {
                   </dd>
                </div>
                <div className="rounded-lg border border-border/60 bg-background/40 px-3 py-2.5">
-                  <dt className="font-semibold text-foreground">{t('rpg.cheatSheet.magicalLabel')}</dt>
+                  <dt className="font-semibold text-foreground">
+                     {t('rpg.cheatSheet.magicalLabel')}
+                  </dt>
                   <dd className="mt-0.5 font-mono text-base font-bold text-primary">
                      {derived.magicalAttackRating}
                   </dd>
@@ -683,7 +712,9 @@ export function CharacterSheetContainer() {
                   </dd>
                </div>
                <div className="rounded-lg border border-border/60 bg-background/40 px-3 py-2.5">
-                  <dt className="font-semibold text-foreground">{t('rpg.cheatSheet.socialLabel')}</dt>
+                  <dt className="font-semibold text-foreground">
+                     {t('rpg.cheatSheet.socialLabel')}
+                  </dt>
                   <dd className="mt-0.5 font-mono text-base font-bold text-primary">
                      {derived.socialInfluencePool}
                   </dd>
@@ -692,39 +723,27 @@ export function CharacterSheetContainer() {
                   </dd>
                </div>
                <div className="rounded-lg border border-border/60 bg-background/40 px-3 py-2.5">
-                  <dt className="font-semibold text-foreground">{t('rpg.cheatSheet.stealthLabel')}</dt>
+                  <dt className="font-semibold text-foreground">
+                     {t('rpg.cheatSheet.stealthLabel')}
+                  </dt>
                   <dd className="mt-0.5 font-mono text-base font-bold text-primary">
                      {derived.stealthRating}
                      {derived.stealthRacialBonus > 0 ? (
                         <span className="ml-2 text-xs font-normal text-emerald-700 dark:text-emerald-300">
-                           {t('rpg.cheatSheet.stealthAffinity', { bonus: derived.stealthRacialBonus })}
+                           {t('rpg.cheatSheet.stealthAffinity', {
+                              bonus: derived.stealthRacialBonus,
+                           })}
                         </span>
                      ) : null}
                   </dd>
                   <dd className="mt-1 text-xs leading-relaxed text-muted-foreground">
-                     {t('rpg.cheatSheet.stealthHelp' as 'rpg.title')}
-                  </dd>
-                  <dd className="mt-2 rounded-md border border-border/50 bg-muted/25 px-2.5 py-2 text-[11px] leading-relaxed text-muted-foreground">
-                     <p className="font-semibold text-foreground/90">
-                        {t('rpg.cheatSheet.stealthStatusTitle' as 'rpg.title')}
-                     </p>
-                     <ul className="mt-1.5 list-inside list-disc space-y-1">
-                        <li>{t('rpg.cheatSheet.stealthDexLine' as 'rpg.title', { dex: totals.dex })}</li>
-                        <li>
-                           {t('rpg.cheatSheet.stealthRacialLine' as 'rpg.title', {
-                              bonus: derived.stealthRacialBonus,
-                           })}
-                        </li>
-                        <li>
-                           {t('rpg.cheatSheet.stealthRatingLine' as 'rpg.title', {
-                              rating: derived.stealthRating,
-                           })}
-                        </li>
-                     </ul>
+                     {t('rpg.cheatSheet.stealthHelp')}
                   </dd>
                </div>
                <div className="rounded-lg border border-border/60 bg-background/40 px-3 py-2.5">
-                  <dt className="font-semibold text-foreground">{t('rpg.cheatSheet.dexSpeedLabel')}</dt>
+                  <dt className="font-semibold text-foreground">
+                     {t('rpg.cheatSheet.dexSpeedLabel')}
+                  </dt>
                   <dd className="mt-0.5 font-mono text-base font-bold text-primary">
                      {derived.extraStrikesBeforeEnemy}{' '}
                      <span className="text-xs font-normal text-muted-foreground">
@@ -864,10 +883,15 @@ export function CharacterSheetContainer() {
                      <p className="text-xs font-bold uppercase tracking-widest text-emerald-700 dark:text-emerald-300">
                         {t('rpg.createdTitle')}
                      </p>
-                     <h2 id={createdSummaryTitleId} className="mt-1 text-2xl font-black tracking-tight text-foreground">
+                     <h2
+                        id={createdSummaryTitleId}
+                        className="mt-1 text-2xl font-black tracking-tight text-foreground"
+                     >
                         {creationSnapshot.characterName.trim()}
                      </h2>
-                     <p className="mt-1 text-sm text-muted-foreground">{t('rpg.createdSubtitle')}</p>
+                     <p className="mt-1 text-sm text-muted-foreground">
+                        {t('rpg.createdSubtitle')}
+                     </p>
                      <p className="mt-2 text-base font-semibold text-primary">
                         {t(`rpg.races.${creationSnapshot.selectedRaceId}.name` as 'rpg.title')}
                      </p>
@@ -877,18 +901,24 @@ export function CharacterSheetContainer() {
                      <div className="mx-auto h-36 w-36 shrink-0 overflow-hidden rounded-2xl border border-emerald-500/40 bg-card shadow-md sm:mx-0">
                         <RacePortrait
                            race={getRaceById(creationSnapshot.selectedRaceId)}
-                           imageAlt={t(`rpg.races.${creationSnapshot.selectedRaceId}.imageAlt` as 'rpg.title')}
+                           imageAlt={t(
+                              `rpg.races.${creationSnapshot.selectedRaceId}.imageAlt` as 'rpg.title',
+                           )}
                            imgClassName="h-full w-full object-cover object-center"
                         />
                      </div>
                      <div className="min-w-0 flex-1 space-y-3">
-                        <h3 className="text-sm font-bold text-foreground">{t('rpg.cheatSheet.title')}</h3>
+                        <h3 className="text-sm font-bold text-foreground">
+                           {t('rpg.cheatSheet.title')}
+                        </h3>
                         <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
                            <div className="rounded-lg border border-border/60 bg-muted/20 px-2.5 py-2 text-center">
                               <p className="text-[10px] font-semibold uppercase tracking-wide text-muted-foreground">
                                  {t('rpg.cheatSheet.hitPointsLabel')}
                               </p>
-                              <p className="font-mono text-lg font-bold text-primary">{summaryDerived.hitPointsMax}</p>
+                              <p className="font-mono text-lg font-bold text-primary">
+                                 {summaryDerived.hitPointsMax}
+                              </p>
                            </div>
                            <div className="rounded-lg border border-border/60 bg-muted/20 px-2.5 py-2 text-center">
                               <p className="text-[10px] font-semibold uppercase tracking-wide text-muted-foreground">
@@ -918,10 +948,14 @@ export function CharacterSheetContainer() {
                               <p className="text-[10px] font-semibold uppercase tracking-wide text-muted-foreground">
                                  {t('rpg.cheatSheet.stealthLabel')}
                               </p>
-                              <p className="font-mono text-lg font-bold text-primary">{summaryDerived.stealthRating}</p>
+                              <p className="font-mono text-lg font-bold text-primary">
+                                 {summaryDerived.stealthRating}
+                              </p>
                               {summaryDerived.stealthRacialBonus > 0 ? (
                                  <p className="mt-0.5 text-[10px] text-emerald-700 dark:text-emerald-300">
-                                    {t('rpg.cheatSheet.stealthAffinity', { bonus: summaryDerived.stealthRacialBonus })}
+                                    {t('rpg.cheatSheet.stealthAffinity', {
+                                       bonus: summaryDerived.stealthRacialBonus,
+                                    })}
                                  </p>
                               ) : null}
                            </div>
@@ -933,7 +967,8 @@ export function CharacterSheetContainer() {
                                  {summaryDerived.extraStrikesBeforeEnemy}
                                  <span className="text-xs font-normal text-muted-foreground">
                                     {' '}
-                                    ({t('rpg.cheatSheet.dexTierLabel')}: {summaryDerived.dexSpeedTier})
+                                    ({t('rpg.cheatSheet.dexTierLabel')}:{' '}
+                                    {summaryDerived.dexSpeedTier})
                                  </span>
                               </p>
                            </div>
@@ -942,7 +977,9 @@ export function CharacterSheetContainer() {
                   </div>
 
                   <section className="rounded-xl border border-border/70 bg-card/50 p-4">
-                     <h3 className="text-sm font-bold text-foreground">{t('rpg.abilitiesHeading')}</h3>
+                     <h3 className="text-sm font-bold text-foreground">
+                        {t('rpg.abilitiesHeading')}
+                     </h3>
                      <ul className="mt-3 space-y-2">
                         {ABILITY_IDS.map((id) => {
                            const raceBonus = creationSnapshot.sheetRacialBonus[id];
@@ -958,7 +995,8 @@ export function CharacterSheetContainer() {
                                     {t(`rpg.abilities.${id}` as 'rpg.title')}
                                  </span>
                                  <span className="font-mono text-xs text-muted-foreground">
-                                    {creationSnapshot.scores[id]} {formatBonus(raceBonus)} {formatBonus(drawback)} →{' '}
+                                    {creationSnapshot.scores[id]} {formatBonus(raceBonus)}{' '}
+                                    {formatBonus(drawback)} →{' '}
                                     <span
                                        className={clsx(
                                           'text-base font-bold text-foreground',
@@ -979,18 +1017,20 @@ export function CharacterSheetContainer() {
                   </section>
 
                   <section className="rounded-xl border border-border/70 bg-card/50 p-4">
-                     <h3 className="text-sm font-bold text-foreground">{t('rpg.cheatSheet.raceSkillsTitle')}</h3>
+                     <h3 className="text-sm font-bold text-foreground">
+                        {t('rpg.cheatSheet.raceSkillsTitle')}
+                     </h3>
                      <ul className="mt-2 space-y-2 text-sm text-muted-foreground">
                         <li>
                            <span className="font-semibold text-foreground">
-                              {t('rpg.cheatSheet.attackSlot1')}:{' '}
+                              {t('rpg.cheatSheet.attacksHeading')} 1:{' '}
                            </span>
                            {raceSkillName(t, creationSnapshot.selectedRaceId, 'attack1')} —{' '}
                            {raceSkillSummary(t, creationSnapshot.selectedRaceId, 'attack1')}
                         </li>
                         <li>
                            <span className="font-semibold text-foreground">
-                              {t('rpg.cheatSheet.attackSlot2')}:{' '}
+                              {t('rpg.cheatSheet.attacksHeading')} 2:{' '}
                            </span>
                            {raceSkillName(t, creationSnapshot.selectedRaceId, 'attack2')} —{' '}
                            {raceSkillSummary(t, creationSnapshot.selectedRaceId, 'attack2')}
@@ -1010,15 +1050,21 @@ export function CharacterSheetContainer() {
                            {raceSkillSummary(t, creationSnapshot.selectedRaceId, 'item')}
                         </li>
                         <li className="border-t border-border/50 pt-2 text-xs">
-                           <span className="font-semibold text-foreground">{t('rpg.cheatSheet.outOfCombat')}: </span>
-                           {t(`rpg.races.${creationSnapshot.selectedRaceId}.skills.item.outOfCombat` as 'rpg.title')}
+                           <span className="font-semibold text-foreground">
+                              {t('rpg.cheatSheet.outOfCombat')}:{' '}
+                           </span>
+                           {t(
+                              `rpg.races.${creationSnapshot.selectedRaceId}.skills.item.outOfCombat` as 'rpg.title',
+                           )}
                         </li>
                      </ul>
                   </section>
 
                   {creationSnapshot.selectedRaceId === 'humans' ? (
                      <p className="rounded-lg border border-primary/25 bg-primary/5 px-3 py-2 text-sm text-foreground/90">
-                        <span className="font-bold text-primary">{t('rpg.human.playstyleTitle')}: </span>
+                        <span className="font-bold text-primary">
+                           {t('rpg.human.playstyleTitle')}:{' '}
+                        </span>
                         {t('rpg.human.playstyleSummary')}
                      </p>
                   ) : null}
@@ -1028,9 +1074,9 @@ export function CharacterSheetContainer() {
                         {t('rpg.raceDrawbackMechanical')}
                      </p>
                      <p className="mt-1 font-mono text-xs font-semibold">
-                        {mechanicalDrawbackParts(creationSnapshot.sheetDrawback, (key) => t(key as 'rpg.title')).join(
-                           ' · ',
-                        ) || t('rpg.raceDrawbackNone')}
+                        {mechanicalDrawbackParts(creationSnapshot.sheetDrawback, (key) =>
+                           t(key as 'rpg.title'),
+                        ).join(' · ') || t('rpg.raceDrawbackNone')}
                      </p>
                   </div>
 
