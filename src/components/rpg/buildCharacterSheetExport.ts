@@ -14,6 +14,8 @@ export type CharacterSheetExportTranslate = (key: string) => string;
 export interface CharacterSheetExportInput {
    exportedAt: string;
    locale: string;
+   /** Player-chosen character name (trimmed for export). */
+   characterName: string;
    /** e.g. `github-actions-fixture` in CI; omit or set for UI exports */
    generator?: string;
    schemaVersion?: number;
@@ -86,8 +88,13 @@ export interface CharacterSheetExportAbilityRow {
    d20Modifier: number;
 }
 
+export interface CharacterSheetExportCharacter {
+   name: string;
+}
+
 export interface CharacterSheetExportV1 {
    meta: CharacterSheetExportMeta;
+   character: CharacterSheetExportCharacter;
    rules: CharacterSheetExportRules;
    pointPool: CharacterSheetExportPointPool;
    race: CharacterSheetExportRace;
@@ -125,6 +132,7 @@ export function buildCharacterSheetExport(
 ): CharacterSheetExportV1 {
    const schemaVersion = input.schemaVersion ?? 1;
    const raceId = input.selectedRace.id;
+   const trimmedName = input.characterName.trim();
 
    const race: CharacterSheetExportRace = {
       id: raceId,
@@ -158,6 +166,9 @@ export function buildCharacterSheetExport(
          app: 'rick-morty-portal',
          ...(input.generator ? { generator: input.generator } : {}),
          llmInstructions: t('rpg.llmInstructions'),
+      },
+      character: {
+         name: trimmedName,
       },
       rules: {
          summary: t('rpg.subtitle'),

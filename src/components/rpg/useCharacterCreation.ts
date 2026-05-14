@@ -19,6 +19,7 @@ import type { AbilityId, AbilityScores, RaceId } from './types';
  * INT 15 on sheet, +2 racial, -1 drawback → `totals.int` 16.
  */
 export function useCharacterCreation() {
+   const [characterName, setCharacterName] = useState('');
    const [selectedRaceId, setSelectedRaceId] = useState<RaceId>(() => defaultRaceId());
    const [scores, setScores] = useState<AbilityScores>(() => defaultScores());
    const [humanBonusChoices, setHumanBonusChoices] = useState<[AbilityId, AbilityId]>([
@@ -91,6 +92,8 @@ export function useCharacterCreation() {
    }, []);
 
    return {
+      characterName,
+      setCharacterName,
       selectedRaceId,
       selectedRace,
       scores,

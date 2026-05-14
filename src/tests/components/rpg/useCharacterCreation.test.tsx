@@ -108,6 +108,19 @@ describe('useCharacterCreation', () => {
       );
    });
 
+   it('starts with empty character name', () => {
+      const { result } = renderHook(() => useCharacterCreation());
+      expect(result.current.characterName).toBe('');
+   });
+
+   it('updates character name', () => {
+      const { result } = renderHook(() => useCharacterCreation());
+      act(() => {
+         result.current.setCharacterName('  Zorb  ');
+      });
+      expect(result.current.characterName).toBe('  Zorb  ');
+   });
+
    it('decrement respects floor', () => {
       const { result } = renderHook(() => useCharacterCreation());
       act(() => {

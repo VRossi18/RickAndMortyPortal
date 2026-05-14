@@ -59,6 +59,7 @@ const payload = buildCharacterSheetExport(t, {
    exportedAt: new Date().toISOString(),
    locale: 'en',
    generator: 'github-actions-fixture',
+   characterName: 'Sample adventurer',
    selectedRaceId,
    selectedRace,
    scores,

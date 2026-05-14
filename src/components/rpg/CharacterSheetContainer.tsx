@@ -57,12 +57,23 @@ function downloadJsonFile(filename: string, data: unknown) {
    URL.revokeObjectURL(url);
 }
 
+function slugForFilename(name: string): string {
+   const s = name
+      .trim()
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, '-')
+      .replace(/^-+|-+$/g, '');
+   return s.slice(0, 48) || 'character';
+}
+
 export function CharacterSheetContainer() {
    const { t, i18n } = useTranslation('common');
    const exportDialogRef = useRef<HTMLDialogElement>(null);
    const exportDialogTitleId = useId();
    const exportDialogDescId = useId();
    const {
+      characterName,
+      setCharacterName,
       selectedRaceId,
       selectedRace,
       scores,
@@ -79,6 +90,7 @@ export function CharacterSheetContainer() {
       setHumanBonusSlot,
    } = useCharacterCreation();
 
+   const nameTrimmed = characterName.trim();
    const previewName = t(`rpg.races.${selectedRace.id}.name` as 'rpg.title');
    const previewSkill = t(`rpg.races.${selectedRace.id}.skill` as 'rpg.title');
    const previewSecondarySkill = t(
@@ -90,15 +102,17 @@ export function CharacterSheetContainer() {
       `rpg.races.${selectedRace.id}.drawbackDescription` as 'rpg.title',
    );
 
-   const canExportJson = remaining === 0;
+   const canExportJson = remaining === 0 && nameTrimmed.length > 0;
 
    const performExportJson = useCallback(() => {
-      if (remaining !== 0) {
+      const trimmed = characterName.trim();
+      if (remaining !== 0 || trimmed.length === 0) {
          return;
       }
       const payload = buildCharacterSheetExport(t as unknown as CharacterSheetExportTranslate, {
          exportedAt: new Date().toISOString(),
          locale: i18n.language,
+         characterName: trimmed,
          selectedRaceId,
          selectedRace,
          scores,
@@ -111,9 +125,13 @@ export function CharacterSheetContainer() {
          humanBonusChoices,
       });
       const safeIso = new Date().toISOString().replaceAll(':', '-');
-      downloadJsonFile(`rnm-rpg-character-${selectedRaceId}-${safeIso}.json`, payload);
+      downloadJsonFile(
+         `rnm-rpg-${slugForFilename(trimmed)}-${selectedRaceId}-${safeIso}.json`,
+         payload,
+      );
    }, [
       t,
+      characterName,
       i18n.language,
       humanBonusChoices,
       remaining,
@@ -128,11 +146,24 @@ export function CharacterSheetContainer() {
    ]);
 
    const openExportConfirmDialog = useCallback(() => {
-      if (remaining !== 0) {
+      if (remaining !== 0 || characterName.trim().length === 0) {
          return;
       }
       exportDialogRef.current?.showModal();
-   }, [remaining]);
+   }, [remaining, characterName]);
+
+   const exportButtonTitle =
+      remaining > 0
+         ? t('rpg.exportBlockedHint')
+         : nameTrimmed.length === 0
+            ? t('rpg.exportBlockedNameHint')
+            : undefined;
+   const exportButtonAriaLabel =
+      canExportJson
+         ? t('rpg.exportJsonAria')
+         : remaining > 0
+            ? t('rpg.exportBlockedAria')
+            : t('rpg.exportBlockedNameAria');
 
    const closeExportConfirmDialog = useCallback(() => {
       exportDialogRef.current?.close();
@@ -158,24 +189,52 @@ export function CharacterSheetContainer() {
                   type="button"
                   onClick={openExportConfirmDialog}
                   disabled={!canExportJson}
-                  title={canExportJson ? undefined : t('rpg.exportBlockedHint')}
+                  title={exportButtonTitle}
                   className={clsx(
                      'rounded-lg border px-4 py-2 text-sm font-semibold transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-400 focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--bg-color)]',
                      canExportJson
                         ? 'border-primary/60 bg-primary/10 text-primary hover:bg-primary/15'
                         : 'cursor-not-allowed border-border/60 bg-muted/30 text-muted-foreground',
                   )}
-                  aria-label={canExportJson ? t('rpg.exportJsonAria') : t('rpg.exportBlockedAria')}
+                  aria-label={exportButtonAriaLabel}
                >
                   {t('rpg.exportJson')}
                </button>
             </div>
-            {!canExportJson ? (
+            {remaining > 0 ? (
                <p className="text-center text-xs text-muted-foreground sm:text-left" role="status">
                   {t('rpg.exportBlockedHint')}
                </p>
             ) : null}
+            {remaining === 0 && nameTrimmed.length === 0 ? (
+               <p className="text-center text-xs text-muted-foreground sm:text-left" role="status">
+                  {t('rpg.exportBlockedNameHint')}
+               </p>
+            ) : null}
          </header>
+
+         <section
+            aria-labelledby="rpg-character-heading"
+            className="rounded-2xl border border-border/80 bg-card/40 p-4 md:p-5"
+         >
+            <h2 id="rpg-character-heading" className="text-lg font-bold text-foreground">
+               {t('rpg.characterHeading')}
+            </h2>
+            <label className="mt-3 block max-w-xl text-sm">
+               <span className="text-muted-foreground">{t('rpg.characterNameLabel')}</span>
+               <input
+                  type="text"
+                  value={characterName}
+                  onChange={(e) => setCharacterName(e.target.value)}
+                  placeholder={t('rpg.characterNamePlaceholder')}
+                  maxLength={80}
+                  autoComplete="off"
+                  className="mt-1.5 w-full rounded-lg border border-border bg-background px-3 py-2 text-base font-semibold text-foreground outline-none placeholder:text-muted-foreground/70 focus-visible:ring-2 focus-visible:ring-green-400"
+                  aria-label={t('rpg.characterNameLabel')}
+               />
+            </label>
+            <p className="mt-2 text-xs text-muted-foreground">{t('rpg.characterNameHint')}</p>
+         </section>
 
          <dialog
             ref={exportDialogRef}
@@ -280,7 +339,19 @@ export function CharacterSheetContainer() {
                   <p className="text-xs font-bold uppercase tracking-widest text-muted-foreground">
                      {t('rpg.selectedRacePreview')}
                   </p>
-                  <p className="mt-1 text-2xl font-black text-foreground">{previewName}</p>
+                  {nameTrimmed ? (
+                     <>
+                        <p className="mt-1 text-2xl font-black tracking-tight text-primary">{nameTrimmed}</p>
+                        <p className="mt-1 text-lg font-bold text-foreground">
+                           <span className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+                              {t('rpg.raceHeading')}{' '}
+                           </span>
+                           {previewName}
+                        </p>
+                     </>
+                  ) : (
+                     <p className="mt-1 text-2xl font-black text-foreground">{previewName}</p>
+                  )}
                   <p className="mt-2 text-sm text-muted-foreground">
                      <span className="font-semibold text-foreground/90">
                         {t('rpg.suggestedSkill')}:{' '}

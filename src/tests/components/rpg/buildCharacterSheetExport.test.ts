@@ -102,9 +102,11 @@ describe('buildCharacterSheetExport', () => {
          exportedAt: '2026-01-01T00:00:00.000Z',
          locale: 'en',
          generator: 'test',
+         characterName: 'Test Hero',
          ...s,
       });
 
+      expect(json.character.name).toBe('Test Hero');
       expect(json.meta.schemaVersion).toBe(1);
       expect(json.meta.exportedAt).toBe('2026-01-01T00:00:00.000Z');
       expect(json.meta.locale).toBe('en');
@@ -146,9 +148,11 @@ describe('buildCharacterSheetExport', () => {
       const json = buildCharacterSheetExport(mockT, {
          exportedAt: '2026-02-02T12:00:00.000Z',
          locale: 'pt',
+         characterName: '  Human PC  ',
          ...s,
       });
 
+      expect(json.character.name).toBe('Human PC');
       expect(json.human?.bonusSlots).toEqual([
          { abilityId: 'int', abilityName: 'ABILITY_INT' },
          { abilityId: 'cha', abilityName: 'ABILITY_CHA' },
@@ -165,6 +169,7 @@ describe('buildCharacterSheetExport', () => {
       const json = buildCharacterSheetExport(mockT, {
          exportedAt: '2026-01-01T00:00:00.000Z',
          locale: 'en',
+         characterName: 'Bird',
          ...s,
       });
       expect(json.abilities.map((a) => a.id)).toEqual([...ABILITY_IDS]);
